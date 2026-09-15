@@ -1,7 +1,7 @@
 [project]
-name = "market-signal-mcp"
-version = "0.1.0"
-description = "Multi-source market-signal MCP server for case-comp and startup-idea research"
+name = "gutcheck"
+version = "1.0.0"
+description = "Research buddy for Claude Code: check any idea, problem, or question against real-world signals"
 requires-python = ">=3.10"
 dependencies = [
     "mcp[cli]",

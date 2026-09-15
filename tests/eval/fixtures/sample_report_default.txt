@@ -1,21 +1,61 @@
-SIGNAL REPORT
+GUTCHECK REPORT
 ════════════════════════════════════════════════════
-Idea:            AI resume builder for Indian college students
+Question:        freelancers keep getting paid late by clients - how common is this and what actually works?
+Type:            PROBLEM
+Checking:        Late payment is a widespread freelancer problem with no settled fix.
 Verdict:         MODERATE_SIGNAL
-Confidence:      MEDIUM (3 sources, 12mo default window)
+Confidence:      MEDIUM (6 sources, 5-year window, worldwide)
 
-── Google Trends (interest_over_time + related_queries, India, 12mo) ──
-"AI resume builder" holds steady in the high-30s/40s over the last 90 days (most recent point isPartial - this week isn't finished yet, don't read the dip as real). Top related query is generic ("resume ai free") - this space isn't short on competitors already using the obvious framing. One rising query, "jobsuit ai", spikes to an extreme relative value - worth a manual check on whether that's a real emerging competitor or a data artifact, not something to over-read from one number.
+── Google Trends (5 years, worldwide) ──
+"late payment" roughly doubled, from ~26 in 2021 to a 55-86 range through 2026.
+"unpaid invoice" and "invoice reminder" stay near the floor (1-5).
+Top rising query is a meme ("universal unpaid invoice viking ship"), which is noise.
+Means: the pain is growing, but people search for the problem, not a tool for it.
 
-── Wikipedia (Applicant_tracking_system pageviews) ──
-Steady ~4,000-4,900 monthly views for most of the window, with a step up in Dec 2025 (6,763) - no clear correlated spike with the Trends rising-query signal. Reading interest in "how ATS works" isn't obviously accelerating alongside search interest in resume tools.
+── Web search: surveys ──
+Remote's State of Freelance Work 2025: 85% of freelancers get paid late at least
+sometimes, and 21% are paid late or not at all more than half the time. Bonsai's
+invoice data (100k+ freelancers): 29% of invoices are late, but 75% of those
+arrive within 14 days.
+Means: very common, yet most late invoices are days late, not unpaid.
+
+── Reddit (r/smallbusiness, r/graphic_design, r/freelance) ──
+Several 2026 threads, in people's own words: "these bigger companies are acting like
+Net 30 means Net 60", "I'm constantly chasing money I've already earned", and a client
+answering a reminder with "a little professional courtesy would be appreciated".
+Means: the pain is as much the awkwardness of chasing as the money.
+
+── Web search: what works ──
+Freelance guides converge on the same four moves: a signed contract with a late-fee
+clause, a deposit (often 50%) or milestone billing, invoicing the day work ends,
+and automated reminders.
+Means: the fix is known. The gap is people applying it consistently.
+
+── App Store (US) ──
+General invoice apps are large and mature (Invoice Simple 122k ratings, Invoice Fly
+105k, Invoice2go 56k). Apps that only chase late payments have 0 ratings.
+Means: reminders already come bundled with invoicing tools, so a standalone fix is a hard sell.
+
+── Google News (past year) ──
+81 headlines, 7 in the last 30 days, mostly general freelancer-finance advice. MediaPost
+(June 2026) reports payments to agencies and freelancers are getting slower.
+Means: a steady background topic, not a news cycle.
+
+What would change this:
+- Evidence that deposits and late fees fail in practice (clients refuse them) would push this to STRONG_SIGNAL for "no settled fix".
+- A survey showing most late invoices go fully unpaid would raise the stakes well beyond the Bonsai picture.
+
+Next steps:
+- Add a 50% deposit and a late-fee line to your next two contracts and track whether either client pushes back.
+- Post in r/freelance asking "what finally got your worst client to pay on time?" and tally the answers.
+- Check whether your current invoicing tool already sends automatic reminders before paying for anything new.
 
 Caveats:
-- Default tier only - no Reddit/HN/Product Hunt signal in this run (would need --deep to see if anyone's actually complaining about existing tools, which is where a real wedge would show up).
-- The "jobsuit ai" rising-query spike is unverified from this data alone; treat as a lead to check manually, not a confirmed emerging competitor.
-- Wikipedia's Sept 2026 figure (735) is a partial month, not a real drop.
+- "late payment" on Google Trends also covers loans and credit cards, so part of the rise has nothing to do with freelancing.
+- Wikipedia has no real article on this (under 25 views a month), so that source was dropped.
+- Reddit search without a key returns relevance-ranked posts without upvote counts.
+- Survey figures come from companies that sell invoicing or payroll tools.
 
-Sources used:    interest_over_time, related_queries, wikipedia_pageviews
-Tokens spent:    ~620 (default tier)
+Sources used:    interest_over_time, related_queries, reddit_signal, news_coverage, app_store_apps, wikipedia_pageviews, web search (2 queries)
 ════════════════════════════════════════════════════
-Pitch line: "Demand for AI resume tools is steady but crowded with generic entrants - the real question worth digging into next is who's actually complaining about existing tools, which needs the --deep tier to answer."
+Bottom line: "Most freelancers get paid late, but the fixes are well known (deposits, late fees, auto-reminders); the real gap is using them, not a missing tool."

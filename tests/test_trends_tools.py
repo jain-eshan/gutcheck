@@ -1,7 +1,7 @@
-"""Contract tests for the 5 original Google Trends tools. Fixtures are recorded
+"""Contract tests for the 4 Google Trends tools. Fixtures are recorded
 HTTP cassettes (see tests/cassettes/) so these run against a fixed snapshot of
 Trends data, not live network - live Trends is scraped, rate-limited, and its
-response shape has drifted before (see the trending_now 404 in README)."""
+response shape has drifted before (a retired endpoint once broke a whole tool)."""
 import pytest
 
 import server
@@ -52,7 +52,8 @@ def test_related_topics_shape():
 
 @pytest.mark.vcr
 def test_interest_by_region_shape_and_sort():
-    records = server.interest_by_region(keyword="lab grown diamonds", response_format="concise")
+    # geo="IN" exercises the state-level breakdown; worldwide is covered below.
+    records = server.interest_by_region(keyword="lab grown diamonds", geo="IN", response_format="concise")
     assert isinstance(records, list)
     assert len(records) <= 10
     assert all("geoName" in r for r in records)
@@ -60,12 +61,20 @@ def test_interest_by_region_shape_and_sort():
     assert values == sorted(values, reverse=True), "concise mode must sort regions by value descending"
 
 
-@pytest.mark.vcr
-def test_trending_now_fails_cleanly_not_a_crash():
-    """Known limitation (README): Google retired the endpoint this depends on.
-    This test locks in the documented failure mode - a clean error string, not
-    an unhandled exception - so a future upstream change is caught as a test
-    change, not silently."""
-    result = server.trending_now()
-    assert isinstance(result, str)
-    assert "failed" in result.lower() or "request" in result.lower()
+
+def test_interest_by_region_worldwide_asks_for_countries(monkeypatch):
+    """Google only accepts resolution="COUNTRY" for a worldwide region breakdown;
+    "REGION" returns HTTP 500, so the default geo="" always failed when checked live."""
+    calls = {}
+
+    class FakeTrends:
+        def build_payload(self, *args, **kwargs):
+            pass
+
+        def interest_by_region(self, resolution, inc_low_vol):
+            calls["resolution"] = resolution
+            return None
+
+    monkeypatch.setattr(server, "get_pytrends", lambda: FakeTrends())
+    server.interest_by_region(keyword="lab grown diamonds")
+    assert calls["resolution"] == "COUNTRY"

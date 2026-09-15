@@ -11,26 +11,26 @@ interactions:
       Content-Length:
       - '0'
       Cookie:
-      - NID=534=RixsQd7LPKCDb5u7eVUtuKhyYHJ2MIJ_Y7qYzT2cTimGUAHHNIo3Jv3g-EvNzTgGOfyBbEUavBkyeWk_v8BGDIxTiuDXQHjaJ8fFU0h5o3ppSQUcu-YkQu7UWo9dyXErHRUFtmVab8jJCBRKfeZvcsfpxuiE3wyLYQrnNECO7IU8ORoslTN19wLBhr8lKD8DgQJaL3U
+      - NID=CuwBCAESngEBp2sxrgKiDIWzV_ONq60DEubFwxCCQba0OVHlpLkvG3XXEO2JyMgI1EbPTyoVzRA6nDgYOrVt5lp5eeRtaLtF6jSTQg1iaUTbutjNzpyuiKbfN1gfMUOxXPtc8WL9ewFl-cz0zFmKxliIm6xmpgJk3VUGk-VtAwzT4YCONqhPM-0cni71zcY4RIg-4e3Z61ZzzvFCYomiG0wuRB3oQigBMkUBDiveEYQM7WlbAXXOtC5oODKAYRHgpUrjjSbS_ti7MWDE0Zpyw3CCbCOPqkRZZyj4q66B-iDV8kHc1dfKOjGlVGMb5Ao
       accept-language:
       - en-US
     method: POST
-    uri: https://trends.google.com/trends/api/explore?hl=en-US&req=%7B%22comparisonItem%22%3A+%5B%7B%22keyword%22%3A+%22lab+grown+diamonds%22%2C+%22time%22%3A+%22today+12-m%22%2C+%22geo%22%3A+%22IN%22%7D%5D%2C+%22category%22%3A+0%2C+%22property%22%3A+%22%22%7D&tz=330
+    uri: https://trends.google.com/trends/api/explore?hl=en-US&req=%7B%22comparisonItem%22%3A+%5B%7B%22keyword%22%3A+%22lab+grown+diamonds%22%2C+%22time%22%3A+%22today+12-m%22%2C+%22geo%22%3A+%22%22%7D%5D%2C+%22category%22%3A+0%2C+%22property%22%3A+%22%22%7D&tz=0
   response:
     body:
       string: ')]}''
 
-        {"widgets":[{"request":{"time":"2025-09-06 2026-09-06","resolution":"WEEK","locale":"en-US","comparisonItem":[{"geo":{"country":"IN"},"complexKeywordsRestriction":{"keyword":[{"type":"BROAD","value":"lab
+        {"widgets":[{"request":{"time":"2025-09-15 2026-09-15","resolution":"WEEK","locale":"en-US","comparisonItem":[{"geo":{},"complexKeywordsRestriction":{"keyword":[{"type":"BROAD","value":"lab
         grown diamonds"}]}}],"requestOptions":{"property":"","backend":"IZG","category":0},"userConfig":{"userType":"USER_TYPE_SCRAPER"}},"lineAnnotationText":"Search
         interest","bullets":[{"text":"lab grown diamonds"}],"showLegend":false,"showAverages":false,"helpDialog":{"title":"Interest
         over time","content":"Numbers represent search interest relative to the highest
         point on the chart for the given region and time. A value of 100 is the peak
         popularity for the term. A value of 50 means that the term is half as popular.
-        A score of 0 means there was not enough data for this term."},"token":"ANI_2wMAAAAAap7lkCjZDP3--s6JIE-t_WWQNPemnd8L","id":"TIMESERIES","type":"fe_line_chart","title":"Interest
-        over time","template":"fe","embedTemplate":"fe_embed","version":"1","isLong":true,"isCurated":false},{"request":{"geo":{"country":"IN"},"comparisonItem":[{"time":"2025-09-06
-        2026-09-06","complexKeywordsRestriction":{"keyword":[{"type":"BROAD","value":"lab
-        grown diamonds"}]}}],"resolution":"REGION","locale":"en-US","requestOptions":{"property":"","backend":"IZG","category":0},"userConfig":{"userType":"USER_TYPE_SCRAPER"}},"geo":"IN","resolution":"provinces","searchInterestLabel":"Search
-        interest","displayMode":"regions","helpDialog":{"title":"Interest by subregion","content":"See
+        A score of 0 means there was not enough data for this term."},"token":"ANI_2wMAAAAAaqpPDAXr5tw8JRsnr9CqXpK8D2_oBG9M","id":"TIMESERIES","type":"fe_line_chart","title":"Interest
+        over time","template":"fe","embedTemplate":"fe_embed","version":"1","isLong":true,"isCurated":false},{"request":{"geo":{},"comparisonItem":[{"time":"2025-09-15
+        2026-09-15","complexKeywordsRestriction":{"keyword":[{"type":"BROAD","value":"lab
+        grown diamonds"}]}}],"resolution":"COUNTRY","locale":"en-US","requestOptions":{"property":"","backend":"IZG","category":0},"userConfig":{"userType":"USER_TYPE_SCRAPER"}},"geo":"world","resolution":"countries","searchInterestLabel":"Search
+        interest","displayMode":"regions","helpDialog":{"title":"Interest by region","content":"See
         in which location your term was most popular during the specified time frame.
         Values are calculated on a scale from 0 to 100, where 100 is the location
         with the most popularity as a fraction of total searches in that location,
@@ -40,11 +40,11 @@ interactions:
         of all queries, not a higher absolute query count. So a tiny country where
         80% of the queries are for \"bananas\" will get twice the score of a giant
         country where only 40% of the queries are for \"bananas\".","url":"https://support.google.com/trends/answer/4355212"},"color":"PALETTE_COLOR_1","index":0,"bullet":"lab
-        grown diamonds","token":"ANI_2wMAAAAAap7lkGs5azdyOkhp5VD-cZFMPNVXUJPh","id":"GEO_MAP","type":"fe_geo_chart_explore","title":"Interest
-        by subregion","template":"fe","embedTemplate":"fe_embed","version":"1","isLong":true,"isCurated":false},{"request":{"restriction":{"geo":{"country":"IN"},"time":"2025-09-06
-        2026-09-06","originalTimeRangeForExploreUrl":"today 12-m","complexKeywordsRestriction":{"keyword":[{"type":"BROAD","value":"lab
-        grown diamonds"}]}},"keywordType":"ENTITY","metric":["TOP","RISING"],"trendinessSettings":{"compareTime":"2024-09-05
-        2025-09-05"},"requestOptions":{"property":"","backend":"IZG","category":0},"language":"en","userCountryCode":"IN","userConfig":{"userType":"USER_TYPE_SCRAPER"}},"helpDialog":{"title":"Related
+        grown diamonds","token":"ANI_2wMAAAAAaqpPDN95cj_0IazDLj-7Fl1y_52JcRjK","id":"GEO_MAP","type":"fe_geo_chart_explore","title":"Interest
+        by region","template":"fe","embedTemplate":"fe_embed","version":"1","isLong":true,"isCurated":false},{"request":{"restriction":{"geo":{},"time":"2025-09-15
+        2026-09-15","originalTimeRangeForExploreUrl":"today 12-m","complexKeywordsRestriction":{"keyword":[{"type":"BROAD","value":"lab
+        grown diamonds"}]}},"keywordType":"ENTITY","metric":["TOP","RISING"],"trendinessSettings":{"compareTime":"2024-09-14
+        2025-09-14"},"requestOptions":{"property":"","backend":"IZG","category":0},"language":"en","userCountryCode":"IN","userConfig":{"userType":"USER_TYPE_SCRAPER"}},"helpDialog":{"title":"Related
         topics","content":"Users searching for your term also searched for these topics.
         You can view by the following metrics: \u003cp\u003e* \u003cb\u003eTop\u003c/b\u003e
         - The most popular topics. Scoring is on a relative scale where a value of
@@ -53,11 +53,11 @@ interactions:
         - Related topics with the biggest increase in search frequency since the last
         time period. Results marked \"Breakout\" had a tremendous increase, probably
         because these topics are new and had few (if any) prior searches."},"color":"PALETTE_COLOR_1","keywordName":"lab
-        grown diamonds","token":"ANI_2wMAAAAAap7lkJqKIKIrIOhni9GA73KvKX4kF8Tp","id":"RELATED_TOPICS","type":"fe_related_searches","title":"Related
-        topics","template":"fe","embedTemplate":"fe_embed","version":"1","isLong":false,"isCurated":false},{"request":{"restriction":{"geo":{"country":"IN"},"time":"2025-09-06
-        2026-09-06","originalTimeRangeForExploreUrl":"today 12-m","complexKeywordsRestriction":{"keyword":[{"type":"BROAD","value":"lab
-        grown diamonds"}]}},"keywordType":"QUERY","metric":["TOP","RISING"],"trendinessSettings":{"compareTime":"2024-09-05
-        2025-09-05"},"requestOptions":{"property":"","backend":"IZG","category":0},"language":"en","userCountryCode":"IN","userConfig":{"userType":"USER_TYPE_SCRAPER"}},"helpDialog":{"title":"Related
+        grown diamonds","token":"ANI_2wMAAAAAaqpPDNgrelAcNn0nroph_lWCt8oSfzQn","id":"RELATED_TOPICS","type":"fe_related_searches","title":"Related
+        topics","template":"fe","embedTemplate":"fe_embed","version":"1","isLong":false,"isCurated":false},{"request":{"restriction":{"geo":{},"time":"2025-09-15
+        2026-09-15","originalTimeRangeForExploreUrl":"today 12-m","complexKeywordsRestriction":{"keyword":[{"type":"BROAD","value":"lab
+        grown diamonds"}]}},"keywordType":"QUERY","metric":["TOP","RISING"],"trendinessSettings":{"compareTime":"2024-09-14
+        2025-09-14"},"requestOptions":{"property":"","backend":"IZG","category":0},"language":"en","userCountryCode":"IN","userConfig":{"userType":"USER_TYPE_SCRAPER"}},"helpDialog":{"title":"Related
         queries","content":"Users searching for your term also searched for these
         queries. You can sort by the following metrics: \u003cp\u003e* \u003cb\u003eTop\u003c/b\u003e
         - The most popular search queries. Scoring is on a relative scale where a
@@ -66,7 +66,7 @@ interactions:
         - Queries with the biggest increase in search frequency since the last time
         period. Results marked \"Breakout\" had a tremendous increase, probably because
         these queries are new and had few (if any) prior searches.","url":"https://support.google.com/trends/answer/4355000"},"color":"PALETTE_COLOR_1","keywordName":"lab
-        grown diamonds","token":"ANI_2wMAAAAAap7lkPNVkGsffYE3dDB3FcZt7Cl4LWs1","id":"RELATED_QUERIES","type":"fe_related_searches","title":"Related
+        grown diamonds","token":"ANI_2wMAAAAAaqpPDANKf4JsWnCJlDn4lFdYy27RXhCp","id":"RELATED_QUERIES","type":"fe_related_searches","title":"Related
         queries","template":"fe","embedTemplate":"fe_embed","version":"1","isLong":false,"isCurated":false}],"keywords":[{"keyword":"lab
         grown diamonds","name":"lab grown diamonds","type":"Search term"}],"timeRanges":["Past
         12 months"],"shareText":"Explore search interest for lab grown diamonds by
@@ -81,7 +81,7 @@ interactions:
       Content-Encoding:
       - gzip
       Content-Security-Policy:
-      - 'script-src ''nonce-WzzNEKhwWBaPqlnbKMA-SA'' ''unsafe-inline'' ''strict-dynamic''
+      - 'script-src ''nonce-izerh4OkGvsK9FRBEJuU-g'' ''unsafe-inline'' ''strict-dynamic''
         https: http: ''unsafe-eval'';object-src ''none'';base-uri ''self'';report-uri
         /trends/cspreport'
       Content-Type:
@@ -89,7 +89,7 @@ interactions:
       Cross-Origin-Opener-Policy:
       - same-origin-allow-popups
       Date:
-      - Sun, 06 Sep 2026 16:25:52 GMT
+      - Tue, 15 Sep 2026 08:10:52 GMT
       Expires:
       - Mon, 01 Jan 1990 00:00:00 GMT
       P3P:
@@ -99,8 +99,8 @@ interactions:
       Server:
       - GSE
       Set-Cookie:
-      - NID=534=dINo7AV50HoWKken-6JdSyw_3unLWubxWKGwTSjou6WdkGKabriUy1HvlLNNJpNG1QFdg8vjPJeeVDSNlOouxGUHXzZ8VY6SkYs4Dc4o_ruy35HCYtX5iMpcn854_TILDWln-Wkb-ZtVr-RwPQoY-F65M6J0gFCZ3spi51DX3NM38X3ojBe68xfs97USASidIsnCf3U;
-        expires=Mon, 08-Mar-2027 16:25:47 GMT; path=/; domain=.google.com; HttpOnly
+      - NID=CuwBCAESngEBp2sxrik5nDhxm8O3wRDlPHl49XdMSF_asjI06Gt2zHq2P-C1izmeao2AK_-3aOYVKgXY0qNNEUIT-yj9KPex2xvvynh0IHdtX5BNzaodiLTo98wmuZnGfrjQjWagZAHj7szyxx1-RXA0OuoB2wZy8vr5iJH_rqGsdTXd7xL68YfC2sX6GUnl_1Pupty3WDoemCTXT4ae6p_ZoBGo9CgBMkUBDiveEaij6kcS2E0QX0T2zumXhi-livXz33qqckq23hNkj0ALB1TyzjBB6AAJGdx0lFJaYZFh96_q92KHo2AHuQJZzAg;
+        expires=Wed, 17-Mar-2027 08:10:46 GMT; path=/; domain=.google.com; HttpOnly
       Transfer-Encoding:
       - chunked
       X-Content-Type-Options:
@@ -122,11 +122,11 @@ interactions:
       Connection:
       - keep-alive
       Cookie:
-      - NID=534=RixsQd7LPKCDb5u7eVUtuKhyYHJ2MIJ_Y7qYzT2cTimGUAHHNIo3Jv3g-EvNzTgGOfyBbEUavBkyeWk_v8BGDIxTiuDXQHjaJ8fFU0h5o3ppSQUcu-YkQu7UWo9dyXErHRUFtmVab8jJCBRKfeZvcsfpxuiE3wyLYQrnNECO7IU8ORoslTN19wLBhr8lKD8DgQJaL3U
+      - NID=CuwBCAESngEBp2sxrgKiDIWzV_ONq60DEubFwxCCQba0OVHlpLkvG3XXEO2JyMgI1EbPTyoVzRA6nDgYOrVt5lp5eeRtaLtF6jSTQg1iaUTbutjNzpyuiKbfN1gfMUOxXPtc8WL9ewFl-cz0zFmKxliIm6xmpgJk3VUGk-VtAwzT4YCONqhPM-0cni71zcY4RIg-4e3Z61ZzzvFCYomiG0wuRB3oQigBMkUBDiveEYQM7WlbAXXOtC5oODKAYRHgpUrjjSbS_ti7MWDE0Zpyw3CCbCOPqkRZZyj4q66B-iDV8kHc1dfKOjGlVGMb5Ao
       accept-language:
       - en-US
     method: GET
-    uri: https://trends.google.com/trends/api/widgetdata/relatedsearches?req=%7B%22restriction%22%3A+%7B%22geo%22%3A+%7B%22country%22%3A+%22IN%22%7D%2C+%22time%22%3A+%222025-09-06+2026-09-06%22%2C+%22originalTimeRangeForExploreUrl%22%3A+%22today+12-m%22%2C+%22complexKeywordsRestriction%22%3A+%7B%22keyword%22%3A+%5B%7B%22type%22%3A+%22BROAD%22%2C+%22value%22%3A+%22lab+grown+diamonds%22%7D%5D%7D%7D%2C+%22keywordType%22%3A+%22ENTITY%22%2C+%22metric%22%3A+%5B%22TOP%22%2C+%22RISING%22%5D%2C+%22trendinessSettings%22%3A+%7B%22compareTime%22%3A+%222024-09-05+2025-09-05%22%7D%2C+%22requestOptions%22%3A+%7B%22property%22%3A+%22%22%2C+%22backend%22%3A+%22IZG%22%2C+%22category%22%3A+0%7D%2C+%22language%22%3A+%22en%22%2C+%22userCountryCode%22%3A+%22IN%22%2C+%22userConfig%22%3A+%7B%22userType%22%3A+%22USER_TYPE_SCRAPER%22%7D%7D&token=ANI_2wMAAAAAap7lkJqKIKIrIOhni9GA73KvKX4kF8Tp&tz=330
+    uri: https://trends.google.com/trends/api/widgetdata/relatedsearches?req=%7B%22restriction%22%3A+%7B%22geo%22%3A+%7B%7D%2C+%22time%22%3A+%222025-09-15+2026-09-15%22%2C+%22originalTimeRangeForExploreUrl%22%3A+%22today+12-m%22%2C+%22complexKeywordsRestriction%22%3A+%7B%22keyword%22%3A+%5B%7B%22type%22%3A+%22BROAD%22%2C+%22value%22%3A+%22lab+grown+diamonds%22%7D%5D%7D%7D%2C+%22keywordType%22%3A+%22ENTITY%22%2C+%22metric%22%3A+%5B%22TOP%22%2C+%22RISING%22%5D%2C+%22trendinessSettings%22%3A+%7B%22compareTime%22%3A+%222024-09-14+2025-09-14%22%7D%2C+%22requestOptions%22%3A+%7B%22property%22%3A+%22%22%2C+%22backend%22%3A+%22IZG%22%2C+%22category%22%3A+0%7D%2C+%22language%22%3A+%22en%22%2C+%22userCountryCode%22%3A+%22IN%22%2C+%22userConfig%22%3A+%7B%22userType%22%3A+%22USER_TYPE_SCRAPER%22%7D%7D&token=ANI_2wMAAAAAaqpPDNgrelAcNn0nroph_lWCt8oSfzQn&tz=0
   response:
     body:
       string: ')]}'',
@@ -142,7 +142,7 @@ interactions:
       Content-Encoding:
       - gzip
       Content-Security-Policy:
-      - 'script-src ''nonce-bSaUxktrgVzVkhERn3BHXg'' ''unsafe-inline'' ''strict-dynamic''
+      - 'script-src ''nonce-kYsK3SHJgdD6x47F3q0LJg'' ''unsafe-inline'' ''strict-dynamic''
         https: http: ''unsafe-eval'';object-src ''none'';base-uri ''self'';report-uri
         /trends/cspreport'
       Content-Type:
@@ -150,16 +150,16 @@ interactions:
       Cross-Origin-Opener-Policy:
       - same-origin-allow-popups
       Date:
-      - Sun, 06 Sep 2026 16:25:52 GMT
+      - Tue, 15 Sep 2026 08:10:52 GMT
       Expires:
-      - Sun, 06 Sep 2026 16:25:52 GMT
+      - Tue, 15 Sep 2026 08:10:52 GMT
       P3P:
       - CP="This is not a P3P policy! See g.co/p3phelp for more info."
       Server:
       - GSE
       Set-Cookie:
-      - NID=534=CXwejETEJWJYdukktun3X89mFMg5zMhXJ1LMRdQ0Hv_fXu_QWjDA3lJlQzAkClnAs4Q7GYozAzJYLvDrkcbly9q3gFYDHfJjpIt-lxmsGSWQ91Fn98cFMdYPty9yVVbx801brtEmBcKu8PPvbfZg_N-P1sVxcb77h6f3rtKMhXPxGljhovbhjFEnL-LvWDRnS-HOYTg;
-        expires=Mon, 08-Mar-2027 16:25:47 GMT; path=/; domain=.google.com; HttpOnly
+      - NID=CuwBCAESngEBp2sxrrTe81RLN_hIaPatWPH3jyIF4mtxwApH32pNlt6iSPdVxphYpz1KW-XpBoPwZspEIe7oDF4ODc5BnkHmaTVbiUh2kd7eTI-3RcIoU8PKw7VV56_vpS1kHeaV8zvRCQz3fxXZAcnloH7wuo-BXZ9GmvWrtw1VLQNOUpzr1cV6tLUleZTj3seXAIomsWOws0_zuPNxhwhfHujINigBMkUBDiveEaij6kcS2E0QX0T2zumXhi-livXz33qqckq23hNkj0ALB1TyzjBB6AAJGdx0lFJaYZFh96_q92KHo2AHuQJZzAg;
+        expires=Wed, 17-Mar-2027 08:10:46 GMT; path=/; domain=.google.com; HttpOnly
       Transfer-Encoding:
       - chunked
       X-Content-Type-Options:

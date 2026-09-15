@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+# gutcheck setup - install dependencies and register the data tools with Claude Code.
+# Safe to re-run any time (after `git pull`, or if something looks broken).
+set -euo pipefail
+
+DIR="$(cd "$(dirname "$0")" && pwd)"
+CONFIG_DIR="$HOME/.config/gutcheck"
+
+say() { printf '\033[1m%s\033[0m\n' "$1"; }
+
+if [ "$DIR" != "$HOME/.claude/skills/gutcheck" ]; then
+  echo "Note: gutcheck is at $DIR. Claude Code only finds the /gutcheck command if it lives at"
+  echo "~/.claude/skills/gutcheck. The data tools will still be registered from here."
+fi
+
+say "1/4  Checking for uv (the Python tool gutcheck runs on)"
+if ! command -v uv >/dev/null 2>&1 && [ ! -x "$HOME/.local/bin/uv" ]; then
+  echo "     uv not found - installing it from astral.sh (official installer)"
+  curl -LsSf https://astral.sh/uv/install.sh | sh
+fi
+UV="$(command -v uv 2>/dev/null || echo "$HOME/.local/bin/uv")"
+echo "     using $UV"
+
+say "2/4  Installing Python dependencies"
+(cd "$DIR" && "$UV" sync --quiet)
+
+say "3/4  Registering the gutcheck tools with Claude Code"
+if command -v claude >/dev/null 2>&1; then
+  claude mcp remove gutcheck --scope user >/dev/null 2>&1 || true
+  claude mcp add --scope user gutcheck -- "$UV" run --directory "$DIR" server.py
+else
+  echo "     The 'claude' command isn't on your PATH, so add this server to your MCP client by hand:"
+  echo "     command: $UV   args: run --directory $DIR server.py"
+fi
+
+say "4/4  Creating your settings file for optional API keys"
+mkdir -p "$CONFIG_DIR"
+chmod 700 "$CONFIG_DIR"
+if [ ! -f "$CONFIG_DIR/.env" ]; then
+  cp "$DIR/.env.example" "$CONFIG_DIR/.env"
+  chmod 600 "$CONFIG_DIR/.env"
+  echo "     created $CONFIG_DIR/.env (empty - gutcheck works without any keys)"
+else
+  echo "     kept your existing $CONFIG_DIR/.env"
+fi
+
+echo
+say "Done. Restart Claude Code, then type:  /gutcheck setup"
+echo "(That checks every data source and walks you through optional keys. Or skip it and try:"
+echo " /gutcheck is there demand for a simpler meal-planning app?)"

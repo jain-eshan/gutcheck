@@ -1,4 +1,4 @@
-"""Eval layer 2 (issue #9): does /market-signal call the right tools for a
+"""Eval layer 2 (issue #9): does /gutcheck call the right tools for a
 given query (Tool Correctness) and avoid calling extras it doesn't need
 (Tool-Calling Efficiency)?
 
@@ -29,6 +29,8 @@ import tempfile
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).parent.parent.parent
+sys.path.insert(0, str(REPO_ROOT))
+from server import get_key  # noqa: E402 - same key lookup the server itself uses
 QUERIES_PATH = Path(__file__).parent / "queries.jsonl"
 RESULTS_PATH = Path(__file__).parent / "tool_selection_results.json"
 TIMEOUT_SECONDS = 180
@@ -41,12 +43,19 @@ ALL_RESEARCH_TOOLS = [
     "wikipedia_pageviews",
     "reddit_signal",
     "builder_activity",
+    "news_coverage",
+    "app_store_apps",
+    "youtube_videos",
     "company_registration",
 ]
 
+# youtube_videos only runs when a key is saved, so deep-tier queries expect it
+# only on machines that have one - otherwise it would be a guaranteed failure.
+HAS_YOUTUBE_KEY = bool(get_key("YOUTUBE_API_KEY"))
+
 MCP_CONFIG = {
     "mcpServers": {
-        "market-signal": {
+        "gutcheck": {
             "command": "uv",
             "args": ["run", "--directory", str(REPO_ROOT), "server.py"],
         }
@@ -78,7 +87,7 @@ def _extract_tool_calls(stream_json_stdout: str) -> list[str]:
         for block in content:
             if isinstance(block, dict) and block.get("type") == "tool_use":
                 name = block.get("name", "")
-                # MCP tool names arrive namespaced, e.g. "mcp__market-signal__reddit_signal"
+                # MCP tool names arrive namespaced, e.g. "mcp__gutcheck__reddit_signal"
                 short_name = name.rsplit("__", 1)[-1]
                 if short_name in ALL_RESEARCH_TOOLS:
                     tools.append(short_name)
@@ -94,7 +103,7 @@ def run_query(query: str) -> dict:
         [
             "claude",
             "-p",
-            f"/market-signal {query}",
+            f"/gutcheck {query}",
             "--mcp-config",
             config_path,
             "--strict-mcp-config",
@@ -121,6 +130,8 @@ def main():
 
     for entry in queries:
         expected = set(entry["expected_tools"])
+        if entry["tier"] == "deep" and HAS_YOUTUBE_KEY:
+            expected.add("youtube_videos")
         try:
             run = run_query(entry["query"])
         except subprocess.TimeoutExpired:

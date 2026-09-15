@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# check_update.sh - cached, throttled version-check for market-signal-mcp.
+# check_update.sh - cached, throttled version-check for gutcheck.
 #
-# Run at /market-signal skill invocation, NOT on every MCP tool call - this is a
+# Run at /gutcheck skill invocation, NOT on every MCP tool call - this is a
 # once-a-day-at-most convenience check, not a critical dependency.
 #
 # Output (one line, or nothing):
@@ -12,16 +12,16 @@
 #                                                    error out the skill)
 #
 # Env overrides (for testing):
-#   MARKET_SIGNAL_STATE_DIR          - override the ~/.config/market-signal-mcp state dir
-#   MARKET_SIGNAL_REMOTE_VERSION_URL - override the remote VERSION URL
+#   GUTCHECK_STATE_DIR          - override the ~/.config/gutcheck state dir
+#   GUTCHECK_REMOTE_VERSION_URL - override the remote VERSION URL
 set -uo pipefail
 
-STATE_DIR="${MARKET_SIGNAL_STATE_DIR:-$HOME/.config/market-signal-mcp}"
+STATE_DIR="${GUTCHECK_STATE_DIR:-$HOME/.config/gutcheck}"
 CACHE_FILE="$STATE_DIR/last-update-check"
 REPO_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 VERSION_FILE="$REPO_DIR/VERSION"
-REMOTE_URL="${MARKET_SIGNAL_REMOTE_VERSION_URL:-https://raw.githubusercontent.com/jain-eshan/market-signal-mcp/main/VERSION}"
-REPO_SLUG="jain-eshan/market-signal-mcp"
+REMOTE_URL="${GUTCHECK_REMOTE_VERSION_URL:-https://raw.githubusercontent.com/jain-eshan/gutcheck/main/VERSION}"
+REPO_SLUG="jain-eshan/gutcheck"
 
 mkdir -p "$STATE_DIR" 2>/dev/null || exit 0
 
@@ -46,6 +46,6 @@ echo "$NOW" > "$CACHE_FILE" 2>/dev/null || true
 [ -z "$REMOTE_VERSION" ] && exit 0
 
 if [ "$LOCAL_VERSION" != "$REMOTE_VERSION" ]; then
-  echo "UPDATE_AVAILABLE $LOCAL_VERSION $REMOTE_VERSION https://github.com/$REPO_SLUG/compare/v$LOCAL_VERSION...v$REMOTE_VERSION"
+  echo "UPDATE_AVAILABLE $LOCAL_VERSION $REMOTE_VERSION https://github.com/$REPO_SLUG/commits/main"
 fi
 exit 0

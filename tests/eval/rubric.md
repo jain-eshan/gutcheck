@@ -1,6 +1,6 @@
-# SIGNAL REPORT quality rubric
+# GUTCHECK REPORT quality rubric
 
-Used by `test_report_quality.py`'s LLM-as-judge evaluator. Score each dimension 1-5 against the report generated for a query in `gold_answers.jsonl`, compared to that entry's `gold_verdict` and `gold_rationale`.
+Used by `run_report_quality_judge.py`'s LLM-as-judge evaluator. Score each dimension 1-5 against the report generated for a query in `gold_answers.jsonl`, compared to that entry's `gold_verdict` and `gold_rationale`.
 
 ## 1. Verdict correctness (weight 3x)
 
