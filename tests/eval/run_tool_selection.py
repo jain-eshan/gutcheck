@@ -130,6 +130,11 @@ def main():
 
     for entry in queries:
         expected = set(entry["expected_tools"])
+        # research.md picks some sources from the question itself (the App Store for a
+        # consumer app, Wikipedia when a concept has an article, builder_activity for
+        # developer tools). Calling one of those is good judgment, not an efficiency
+        # failure, so a query lists them as optional: never required, never penalized.
+        optional = set(entry.get("optional_tools", []))
         if entry["tier"] == "deep" and HAS_YOUTUBE_KEY:
             expected.add("youtube_videos")
         try:
@@ -141,7 +146,7 @@ def main():
 
         called = set(run["tools_called"])
         missing = expected - called
-        extra = called - expected
+        extra = called - expected - optional
         ok = not missing and not extra and run["returncode"] == 0
 
         if ok:
@@ -151,6 +156,7 @@ def main():
                 "id": entry["id"],
                 "query": entry["query"],
                 "expected": sorted(expected),
+                "optional": sorted(optional),
                 "called": run["tools_called"],
                 "missing": sorted(missing),
                 "extra": sorted(extra),

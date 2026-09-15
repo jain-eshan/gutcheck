@@ -270,3 +270,62 @@ def test_http_429_returns_rate_limited_message(monkeypatch):
     result = server.app_store_apps("habit tracker")
     assert isinstance(result, str)
     assert result.startswith("Rate-limited or blocked (429) by itunes.apple.com")
+
+
+def _rss(entries):
+    """Minimal Reddit search feed. Each entry is (title, subreddit, body)."""
+    items = "".join(
+        f"""<entry><title>{t}</title><category term="{sub}"/>
+        <content type="html">&lt;div&gt;{body}&lt;/div&gt;</content>
+        <link href="https://www.reddit.com/r/{sub}/comments/x/"/>
+        <published>2026-08-25T05:38:51+00:00</published></entry>"""
+        for t, sub, body in entries
+    )
+    return f'<?xml version="1.0"?><feed xmlns="http://www.w3.org/2005/Atom">{items}</feed>'.encode()
+
+
+def test_reddit_drops_results_sharing_no_query_word(monkeypatch):
+    """Reddit's keyless search matches loosely, so a long question comes back with
+    posts that happen to share a common word - live-observed: a Destiny 2 patch
+    thread for "rust vs go which should I learn". Those must not reach a report as
+    community signal."""
+    feed = _rss([
+        ("Why choose Go over Rust today?", "golang", "both are fast"),
+        ("This Week In Destiny", "DestinyTheGame", "Monument of Triumph update"),
+        ("Tips for a smoother league start", "PathOfExileBuilds", "stuff I learnt"),
+    ])
+    monkeypatch.setattr(server.requests, "get", lambda url, **kwargs: FakeResponse(url, content=feed))
+    titles = [r["title"] for r in server.reddit_signal("rust or go")]
+    assert titles == ["Why choose Go over Rust today?"]
+
+
+def test_reddit_ranks_by_how_many_query_words_match(monkeypatch):
+    feed = _rss([
+        ("Meal ideas", "cooking", "nothing much"),
+        ("Simple meal prep app wanted", "mealprep", "every app is bloated"),
+    ])
+    monkeypatch.setattr(server.requests, "get", lambda url, **kwargs: FakeResponse(url, content=feed))
+    titles = [r["title"] for r in server.reddit_signal("meal prep app")]
+    assert titles == ["Simple meal prep app wanted", "Meal ideas"]
+
+
+def test_relevance_matches_whole_words_only():
+    """"I learnt" must not count as a match for "learn", or near-miss posts survive
+    the filter and get quoted as evidence."""
+    assert server._relevance("learn rust", "stuff I learnt in poe") == 0
+    assert server._relevance("learn rust", "how I learn rust") == 2
+
+
+def test_call_tool_runs_a_tool_from_the_terminal(monkeypatch, capsys):
+    """`server.py call <tool>` is what lets /gutcheck setup demo a real check in the
+    session where someone just installed gutcheck, before Claude Code has loaded the
+    MCP tools."""
+    monkeypatch.setattr(server, "app_store_apps", lambda **kw: [{"name": "Mealime", **kw}])
+    server.call_tool("app_store_apps", {"query": "meal prep", "limit": 1})
+    assert '"name": "Mealime"' in capsys.readouterr().out
+
+
+def test_call_tool_rejects_an_unknown_tool_with_the_list():
+    with pytest.raises(SystemExit) as excinfo:
+        server.call_tool("definitely_not_a_tool", {})
+    assert "reddit_signal" in str(excinfo.value)

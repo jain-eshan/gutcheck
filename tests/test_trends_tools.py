@@ -78,3 +78,23 @@ def test_interest_by_region_worldwide_asks_for_countries(monkeypatch):
     monkeypatch.setattr(server, "get_pytrends", lambda: FakeTrends())
     server.interest_by_region(keyword="lab grown diamonds")
     assert calls["resolution"] == "COUNTRY"
+
+
+def test_concise_timeseries_spans_the_whole_window_not_just_the_end():
+    """Concise mode used to keep only the last 90 days, so a 5-year request came
+    back as 13 weekly points with nothing saying the rest was dropped - a reader
+    could conclude interest was zero until this year. Thinning must keep the first
+    and last points and sample across everything between."""
+    records = [{"date": f"2021-{m:02d}-01T00:00:00.000", "x": m} for m in range(1, 13)]
+    records += [{"date": f"2026-{m:02d}-01T00:00:00.000", "x": 100 + m} for m in range(1, 13)]
+    thinned = server.apply_format(list(records), "concise", timeseries=True)
+    assert thinned[0] == records[0]
+    assert thinned[-1] == records[-1]
+    assert len(thinned) <= server.CONCISE_TIMESERIES_POINTS
+
+
+def test_concise_timeseries_thins_a_long_series():
+    records = [{"date": f"2020-01-{d:02d}T00:00:00.000", "x": d} for d in range(1, 29)] * 10
+    thinned = server.apply_format(list(records), "concise", timeseries=True)
+    assert len(thinned) == server.CONCISE_TIMESERIES_POINTS
+    assert server.apply_format(list(records), "full", timeseries=True) == records

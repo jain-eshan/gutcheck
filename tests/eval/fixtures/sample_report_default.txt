@@ -2,60 +2,90 @@ GUTCHECK REPORT
 ════════════════════════════════════════════════════
 Question:        freelancers keep getting paid late by clients - how common is this and what actually works?
 Type:            PROBLEM
-Checking:        Late payment is a widespread freelancer problem with no settled fix.
+Checking:        Late payment is a systemic freelancer problem, not individual bad luck.
 Verdict:         MODERATE_SIGNAL
-Confidence:      MEDIUM (6 sources, 5-year window, worldwide)
+Confidence:      MEDIUM (5 sources, 5-year window, worldwide)
 
-── Google Trends (5 years, worldwide) ──
-"late payment" roughly doubled, from ~26 in 2021 to a 55-86 range through 2026.
-"unpaid invoice" and "invoice reminder" stay near the floor (1-5).
-Top rising query is a meme ("universal unpaid invoice viking ship"), which is noise.
-Means: the pain is growing, but people search for the problem, not a tool for it.
+THE READ
+It's not you, and it's not rare: across the surveys, most freelancers get paid
+late at least sometimes, and roughly a third of all invoices land after the due
+date. But the second half of your question has an uncomfortable answer. The fixes
+are known and boring, and they work: a deposit up front, a late fee written into
+the contract, an invoice sent the day the work ends, and automatic reminders after.
+Almost nobody is short of tools here, because every invoicing app already sends
+reminders. What people are short of is the nerve to enforce terms with a client
+they're afraid of losing. The threads aren't asking how to chase an invoice; they're
+asking whether they're allowed to. That's a confidence problem wearing a process
+problem's clothes, and it's why the pain persists even though the playbook is settled.
 
-── Web search: surveys ──
-Remote's State of Freelance Work 2025: 85% of freelancers get paid late at least
-sometimes, and 21% are paid late or not at all more than half the time. Bonsai's
-invoice data (100k+ freelancers): 29% of invoices are late, but 75% of those
-arrive within 14 days.
-Means: very common, yet most late invoices are days late, not unpaid.
+WHAT'S GOING ON
+- What you're up against today is a polite reminder email and hoping. That's the
+  status quo, and it mostly works slowly: most late invoices arrive within two
+  weeks, so this reads as a cash-flow and dignity problem, not a bad-debt one.
+- Desire, not demand. Search interest for the problem is climbing, but searches
+  for tools that solve it sit near zero. People are looking for reassurance and
+  scripts, not software.
+- The sources disagree in a useful way: news coverage is about freelancer finance
+  in general, while the actual complaints are about specific relationships with
+  bigger clients. The power imbalance is the real subject.
+- The sharpest thing anyone said: "these bigger companies are acting like Net 30
+  means Net 60." Nobody in those threads is confused about what to do. They're
+  weighing whether enforcing it costs them the account.
 
-── Reddit (r/smallbusiness, r/graphic_design, r/freelance) ──
-Several 2026 threads, in people's own words: "these bigger companies are acting like
-Net 30 means Net 60", "I'm constantly chasing money I've already earned", and a client
-answering a reminder with "a little professional courtesy would be appreciated".
-Means: the pain is as much the awkwardness of chasing as the money.
-
-── Web search: what works ──
-Freelance guides converge on the same four moves: a signed contract with a late-fee
-clause, a deposit (often 50%) or milestone billing, invoicing the day work ends,
-and automated reminders.
-Means: the fix is known. The gap is people applying it consistently.
-
-── App Store (US) ──
-General invoice apps are large and mature (Invoice Simple 122k ratings, Invoice Fly
-105k, Invoice2go 56k). Apps that only chase late payments have 0 ratings.
-Means: reminders already come bundled with invoicing tools, so a standalone fix is a hard sell.
-
-── Google News (past year) ──
-81 headlines, 7 in the last 30 days, mostly general freelancer-finance advice. MediaPost
-(June 2026) reports payments to agencies and freelancers are getting slower.
-Means: a steady background topic, not a news cycle.
+THE CASE AGAINST
+The strongest counter is that this was checked worldwide and in English, and late
+payment is heavily shaped by local law: the EU and UK have statutory interest rules
+that change what "what works" even means. A second is that the survey numbers all
+come from companies selling invoicing or payroll products, which have an interest in
+the problem looking big. Checking one country properly, with its own rules, would
+sharpen this a lot.
 
 What would change this:
-- Evidence that deposits and late fees fail in practice (clients refuse them) would push this to STRONG_SIGNAL for "no settled fix".
-- A survey showing most late invoices go fully unpaid would raise the stakes well beyond the Bonsai picture.
+- Evidence that deposits and late fees get refused in practice would move this to
+  STRONG_SIGNAL for "no settled fix", since the known playbook would then not work.
+- A survey showing most late invoices go unpaid entirely, rather than arriving late,
+  would change this from a cash-flow problem to a much more serious one.
 
 Next steps:
-- Add a 50% deposit and a late-fee line to your next two contracts and track whether either client pushes back.
-- Post in r/freelance asking "what finally got your worst client to pay on time?" and tally the answers.
-- Check whether your current invoicing tool already sends automatic reminders before paying for anything new.
+- Put a 50% deposit and a late-fee line in your next two contracts and see whether
+  either client actually pushes back. Most don't, and that's the fastest way to learn it.
+- Check whether your current invoicing tool already sends automatic reminders before
+  you pay for anything new. It probably does.
+- Ask in r/freelance what finally got someone's worst payer to pay on time, and count
+  how many answers are about process versus about firing the client.
 
 Caveats:
-- "late payment" on Google Trends also covers loans and credit cards, so part of the rise has nothing to do with freelancing.
-- Wikipedia has no real article on this (under 25 views a month), so that source was dropped.
-- Reddit search without a key returns relevance-ranked posts without upvote counts.
-- Survey figures come from companies that sell invoicing or payroll tools.
+- "late payment" on Google Trends also covers loans and credit cards, so part of that
+  rise has nothing to do with freelancing.
+- Wikipedia had nothing usable here (under 25 views a month), so it was dropped rather
+  than padded into the report.
+- All survey figures come from vendors selling invoicing or payroll tools.
+- Reddit without an API key returns posts without upvote counts, so popularity is unknown.
 
-Sources used:    interest_over_time, related_queries, reddit_signal, news_coverage, app_store_apps, wikipedia_pageviews, web search (2 queries)
+── Evidence ──
+Google Trends, 5 years, worldwide: "late payment" rose from ~26 (2021) to a 55-86
+range through 2026. "unpaid invoice" and "invoice reminder" stayed at 1-5 throughout.
+Top rising related query was a meme, not a real term.
+
+Web search, surveys: Remote's State of Freelance Work 2025 reports 85% of freelancers
+are paid late at least sometimes, 21% more than half the time. Bonsai's invoice data
+(100k+ freelancers) shows 29% of invoices late, 75% of those paid within 14 days.
+
+Reddit, r/smallbusiness + r/graphic_design, 2026 threads: "Do you guys actually enforce
+late fees on Net 30 invoices or is it an empty threat?", "I'm constantly chasing money
+I've already earned", and a client replying to a reminder with "a little professional
+courtesy would be appreciated."
+
+App Store, US: Invoice Simple (122k ratings), Invoice Fly (105k), Invoice2go (56k), all
+updated within the month. Standalone late-payment chasers: 0 ratings.
+
+Google News, past year: 81 headlines, 7 in the last 30 days, mostly general freelancer
+finance. MediaPost (June 2026) reports agency and freelancer payments slowing.
+
+Web search, advice: freelance guides converge on the same four moves - signed contract
+with a late-fee clause, 50% deposit or milestone billing, invoice immediately, automated
+reminders.
+
+Sources used:    Google Trends, Reddit, Google News, App Store, web search (2 queries)
 ════════════════════════════════════════════════════
-Bottom line: "Most freelancers get paid late, but the fixes are well known (deposits, late fees, auto-reminders); the real gap is using them, not a missing tool."
+Bottom line: "Most freelancers get paid late, the fixes are known and boring (deposit, late fee, instant invoice, auto-reminders), and the real blocker is enforcing terms with clients you're afraid to lose."

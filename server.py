@@ -85,18 +85,37 @@ def df_to_records(df):
     return json.loads(df.to_json(orient="records", date_format="iso"))
 
 
-def apply_format(records, response_format, *, sort_key=None, limit=None, recent_days=None):
+CONCISE_TIMESERIES_POINTS = 26
+
+
+def thin_timeseries(records, max_points=CONCISE_TIMESERIES_POINTS):
+    """Evenly sample a time series down to max_points, always keeping the first and
+    last record.
+
+    Concise mode used to keep only the last 90 days, which quietly destroyed any
+    longer request: asking for 5 years returned 13 weekly points with nothing saying
+    the rest had been dropped, so a reader could conclude interest was zero until
+    this year. Thinning instead of truncating keeps the real shape of the window that
+    was actually asked for, at a similar token cost."""
+    if len(records) <= max_points:
+        return records
+    step = (len(records) - 1) / (max_points - 1)
+    picked = {round(i * step) for i in range(max_points)}
+    picked.add(len(records) - 1)
+    return [r for i, r in enumerate(records) if i in picked]
+
+
+def apply_format(records, response_format, *, sort_key=None, limit=None, timeseries=False):
     """Shrink a list of dict records for response_format="concise". No-op for "full"
-    or an empty/non-list input. recent_days filters by an ISO "date" field (used for
-    time-series data); sort_key + limit implement top-N truncation (used for ranked
-    lists like related queries/topics/regions). Concise mode also rounds floats to
-    whole numbers and drops isPartial when False (it's the common case - only worth
-    stating when True)."""
+    or an empty/non-list input. timeseries thins a date-keyed series to a readable
+    number of points spanning the whole window; sort_key + limit implement top-N
+    truncation (used for ranked lists like related queries/topics/regions). Concise
+    mode also rounds floats to whole numbers and drops isPartial when False (it's the
+    common case - only worth stating when True)."""
     if response_format != "concise" or not records:
         return records
-    if recent_days is not None:
-        cutoff = (datetime.now(timezone.utc) - timedelta(days=recent_days)).date().isoformat()
-        records = [r for r in records if r.get("date", "") >= cutoff]
+    if timeseries:
+        records = thin_timeseries(records)
     if sort_key is not None:
         records = sorted(records, key=lambda r: r.get(sort_key) or 0, reverse=True)
     if limit is not None:
@@ -121,9 +140,10 @@ def interest_over_time(
         keywords: 1-5 search terms to compare. Only the first 5 are used; additional keywords are silently dropped.
         timeframe: pytrends timeframe string, e.g. "today 12-m", "today 5-y", "now 7-d", or "YYYY-MM-DD YYYY-MM-DD".
         geo: ISO country code (e.g. "US", "IN", "GB"), or "" for worldwide (default).
-        response_format: "concise" (default) returns only the most recent 90 days of records,
-            rounded to whole numbers, to keep token cost low. "full" returns every record in
-            the requested timeframe, unrounded - use it when you actually need the long history.
+        response_format: "concise" (default) covers the whole requested timeframe, thinned to
+            about 26 evenly spaced points (first and last always kept) and rounded to whole
+            numbers, so the shape of the window is intact at a low token cost. "full" returns
+            every point unrounded - use it when you need week-by-week detail.
 
     Returns:
         A list of records, one per date, each containing:
@@ -135,7 +155,7 @@ def interest_over_time(
     get_pytrends().build_payload(keywords[:5], timeframe=timeframe, geo=geo)
     df = get_pytrends().interest_over_time()
     records = df_to_records(df)
-    return apply_format(records, response_format, recent_days=90)
+    return apply_format(records, response_format, timeseries=True)
 
 
 @mcp.tool()
@@ -380,6 +400,35 @@ def _reddit_oauth_token(client_id: str, client_secret: str) -> str:
     return resp.json()["access_token"]
 
 
+_STOPWORDS = {
+    "the", "and", "for", "with", "that", "this", "from", "what", "which", "should", "would",
+    "have", "has", "are", "was", "were", "you", "your", "about", "into", "than", "then",
+    "how", "why", "when", "does", "did", "can", "could", "there", "their", "them", "not",
+    "any", "all", "get", "got", "just", "like", "one", "two", "vs", "versus", "best", "good",
+}
+
+
+def _relevance(query: str, text: str) -> int:
+    """How many distinct meaningful query words appear in a result. Reddit's keyless
+    search matches loosely, so a long natural-language query ("rust vs go which should
+    I learn") comes back with unrelated posts that happen to share a common word.
+    Scoring lets the caller drop the noise instead of quoting a Destiny 2 thread as
+    community signal."""
+    words = {w for w in re.findall(r"[a-z0-9]+", query.lower()) if len(w) > 2 and w not in _STOPWORDS}
+    if not words:
+        return 1
+    found = set(re.findall(r"[a-z0-9]+", text.lower()))
+    return len(words & found)
+
+
+def _by_relevance(records: list, query: str) -> list:
+    """Drop results matching no query word, then sort by how many they match.
+    Ties keep the source's own ranking (Python's sort is stable)."""
+    scored = [(r, _relevance(query, f"{r.get('title', '')} {r.get('snippet', '')}")) for r in records]
+    keep = [(r, score) for r, score in scored if score > 0]
+    return [r for r, _ in sorted(keep, key=lambda pair: pair[1], reverse=True)]
+
+
 def _strip_html(text: str, limit: int = 300) -> str:
     text = re.sub(r"<[^>]+>", " ", html.unescape(text or ""))
     return re.sub(r"\s+", " ", text).strip()[:limit]
@@ -402,6 +451,11 @@ def reddit_signal(query: str, subreddits: list[str] | None = None, limit: int = 
         limit: max results, capped at 100.
         time_filter: "week", "month", "year" (default), or "all".
 
+    Keep the query short (2-4 words) and pass `subreddits` when obvious communities exist.
+    Reddit's keyless search matches loosely on long questions, so results that share no
+    meaningful word with the query are dropped and the rest are ranked by how many query
+    words they match.
+
     Returns:
         A list of records with "title", "subreddit", "snippet" (first ~300 chars of the post
         body), "url", "created". "score" and "num_comments" are included only in API mode.
@@ -418,7 +472,7 @@ def reddit_signal(query: str, subreddits: list[str] | None = None, limit: int = 
             timeout=15,
         )
         resp.raise_for_status()
-        return [
+        return _by_relevance([
             {
                 "title": c["data"].get("title"),
                 "subreddit": c["data"].get("subreddit"),
@@ -429,7 +483,7 @@ def reddit_signal(query: str, subreddits: list[str] | None = None, limit: int = 
                 "created": datetime.fromtimestamp(c["data"].get("created_utc", 0), timezone.utc).date().isoformat(),
             }
             for c in resp.json().get("data", {}).get("children", [])
-        ]
+        ], query)
 
     base = f"https://www.reddit.com/r/{scope}/search.rss" if subreddits else "https://www.reddit.com/search.rss"
     params = {"q": query, "sort": "relevance", "t": time_filter, "limit": limit}
@@ -457,7 +511,7 @@ def reddit_signal(query: str, subreddits: list[str] | None = None, limit: int = 
             "url": link.get("href") if link is not None else None,
             "created": (entry.findtext(f"{atom}published") or "")[:10],
         })
-    return records
+    return _by_relevance(records, query)
 
 
 @mcp.tool()
@@ -667,6 +721,20 @@ def youtube_videos(query: str, limit: int = 10, published_after_days: int | None
     ]
 
 
+def call_tool(name: str, params: dict):
+    """`uv run server.py call <tool> '<json params>'` - run one tool from the terminal.
+
+    Exists so the `/gutcheck setup` walkthrough can run a real check in the session
+    where someone just installed gutcheck. Claude Code loads MCP tools at session
+    start, so a first-time installer cannot call them until they restart; without
+    this, setup always ends on "restart and try again" instead of showing the thing
+    working."""
+    tool = globals().get(name)
+    if not callable(tool) or not any(name == t for t in TOOL_NAMES):
+        raise SystemExit(f"unknown tool '{name}'. Available: {', '.join(TOOL_NAMES)}")
+    print(json.dumps(tool(**params), indent=1, default=str))
+
+
 def doctor():
     """`uv run server.py doctor` - live-check every source and print one line each, so
     `/gutcheck setup` (and users) can see what works on this machine right now."""
@@ -689,12 +757,30 @@ def doctor():
             print(f"[error]    {name}: {result[:160]}")
         else:
             print(f"[ok]       {name}")
-    for extra in ("GITHUB_TOKEN", "REDDIT_CLIENT_ID"):
-        print(f"[{'saved' if get_key(extra) else 'optional'}]{' ' * (7 if get_key(extra) else 2)}{extra}")
+    for label, key, adds in (
+        ("GitHub token", "GITHUB_TOKEN", "raises GitHub search to 30/min"),
+        ("Reddit API", "REDDIT_CLIENT_ID", "adds scores, removes the 1/min wait"),
+    ):
+        status = "saved" if get_key(key) else "optional"
+        print(f"[{status}]{' ' * (6 if status == 'saved' else 4)}{label}: {adds} ({key})")
+
+
+TOOL_NAMES = (
+    "interest_over_time", "related_queries", "related_topics", "interest_by_region",
+    "wikipedia_pageviews", "reddit_signal", "builder_activity", "news_coverage",
+    "app_store_apps", "youtube_videos", "company_registration",
+)
 
 
 if __name__ == "__main__":
-    if sys.argv[1:] == ["doctor"]:
+    args = sys.argv[1:]
+    if args == ["doctor"]:
         doctor()
+    elif args and args[0] == "call":
+        if len(args) < 2:
+            raise SystemExit(f"usage: server.py call <tool> '<json params>'\ntools: {', '.join(TOOL_NAMES)}")
+        call_tool(args[1], json.loads(args[2]) if len(args) > 2 else {})
+    elif args:
+        raise SystemExit(f"usage: server.py [doctor | call <tool> '<json params>']")
     else:
         mcp.run()

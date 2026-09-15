@@ -1,83 +1,111 @@
-# /gutcheck setup
+# Setting someone up
 
-A friendly walkthrough that confirms gutcheck works and optionally connects extra data sources. Assume the user may not be technical: explain each step in one plain sentence, never dump a wall of instructions, and do one thing at a time.
+Get them from "I just installed this" to "I've seen it answer something I care about." One thing at a time, plain words, and you do the work.
 
-## 1. Make sure it's installed
+The order matters: **ask what they want to check before you talk about infrastructure.** Nobody installed a research tool to hear about API keys. Their question comes first, the plumbing runs in the background, and the whole thing ends with a real answer.
+
+Use the Voice from SKILL.md. Two rules matter most here: never read them a list of key names, and never end a step without saying what it got them.
+
+## 1. Open with their question, not your status
+
+Say hello in two lines and ask. Nothing else yet.
+
+> I'm your research buddy. I check hunches against real data: search trends, what people say on Reddit, news, the App Store, GitHub, and the open web. Then I tell you what I think it means.
+>
+> What's on your mind? An idea you're sitting on, a problem that keeps biting you, a topic you're curious about, or a decision you're stuck on. Something real beats a test question, because you'll know whether the answer is any good.
+
+Ask this in chat, as a plain question. Don't use AskUserQuestion here: it's a multiple-choice control, and this answer needs to be theirs, in their words.
+
+## 2. Check the plumbing while they type
+
+Run these in the same turn you ask, so the waiting happens while they think:
 
 ```bash
-ls ~/.claude/skills/gutcheck/server.py ~/.config/gutcheck/.env 2>&1
-claude mcp get gutcheck 2>&1 | head -5
-```
-
-- If `server.py` is missing, gutcheck isn't installed where Claude Code looks for it. Offer to run: `git clone --depth 1 https://github.com/jain-eshan/gutcheck.git ~/.claude/skills/gutcheck && ~/.claude/skills/gutcheck/setup`.
-- If `.env` is missing or `claude mcp get gutcheck` says it isn't found, run `~/.claude/skills/gutcheck/setup` and show the output.
-- If the gutcheck tools (like `interest_over_time`) aren't available in this conversation but the server is registered, the user needs to restart Claude Code once. Tell them so plainly. You can still continue with steps 2-4, since they use the terminal, not the tools.
-
-## 2. Check every source
-
-Tell the user: "Checking each data source live. This takes up to a minute."
-
-```bash
+ls ~/.claude/skills/gutcheck/server.py >/dev/null 2>&1 && echo "INSTALLED" || echo "NOT_INSTALLED"
+cat ~/.config/gutcheck/profile.json 2>/dev/null || echo "NO_PROFILE"
+wc -l < ~/.config/gutcheck/history.jsonl 2>/dev/null || echo 0
+claude mcp get gutcheck 2>&1 | head -3
 cd ~/.claude/skills/gutcheck && uv run server.py doctor 2>/dev/null
 ```
 
-Show the result as a short table: source, status, and what it's used for. Explain the statuses:
-- `ok`: working now.
-- `optional`: needs a free key. gutcheck works without it.
-- `error`: read the message. A rate limit (403/429) is usually temporary, so suggest trying again in a minute. For anything else, run `~/.claude/skills/gutcheck/setup` again, then re-check.
+The doctor calls every source live. Usually about ten seconds, occasionally up to a minute when Reddit's free tier makes it wait.
 
-Then say what already works with no keys: Google Trends, Reddit, Google News, Wikipedia, Hacker News, GitHub, and the App Store.
+Handle the broken cases before anything else, and only mention what's broken:
 
-## 3. Offer the optional keys
+- **NOT_INSTALLED:** offer to run `git clone --depth 1 https://github.com/jain-eshan/gutcheck.git ~/.claude/skills/gutcheck && ~/.claude/skills/gutcheck/setup`.
+- **`claude mcp get` says not found:** run `~/.claude/skills/gutcheck/setup` and show the result.
+- **A source reports `error`:** a rate limit (403, 429) is temporary, so say that and move on. Anything else, show the message and offer to re-run the installer.
+- **`claude mcp get` says Connected but the `mcp__gutcheck__*` tools aren't in this session:** normal on a fresh install, because Claude Code loads tools at session start. Not a problem: you can run every tool from the terminal (SKILL.md, "Check your instruments"). Mention it once, in one sentence, and never as an apology.
 
-Ask with AskUserQuestion (multiSelect) which extras they want. Only list keys that aren't saved yet. Recommend YouTube first, since it's the most useful and quick to get.
+**Returning user** (a profile exists **and** history is non-empty): skip the introduction. "Welcome back. Everything's still working. Want to add a source, or just get going?" A history file with no profile is not a returning user; treat them as new.
 
-| Option | What it adds | Effort |
+## 3. Aim it at them
+
+You have their question. Now get the little you can't infer from it, in **one** AskUserQuestion with at most two questions:
+
+- **Where they are**, when the question is location-sensitive. Country decides which market you check, which news edition, and which app store.
+- **What they do**, so future runs know which communities to search: building a product, running a business, working inside a company, freelancing, studying, something else.
+
+Skip either one you can already tell from what they said. If their question names a city or a local brand, you know the country; don't ask.
+
+Save it:
+
+```bash
+mkdir -p ~/.config/gutcheck && python3 - <<'PY'
+import json, os
+path = os.path.expanduser("~/.config/gutcheck/profile.json")
+json.dump({
+    "role": "<what they do, their words>",
+    "country": "<ISO code, e.g. US, IN, GB>",
+    "working_on": "<what they're building or dealing with>",
+    "first_question": "<their answer from step 1>",
+}, open(path, "w"), indent=1)
+PY
+```
+
+One line, no explanation of the explanation: "Saved locally so I don't ask again."
+
+## 4. Offer a key only if it would help their question
+
+Look at what they actually asked. A consumer app question wants YouTube. A B2B question doesn't. A question about a specific company wants company records. If nothing fits, say so and move on: "Nothing here needs an extra key. Let's just run it."
+
+When something does fit, offer it as what it gets them, never as a key name. One AskUserQuestion, multi-select, listing **only** what's relevant plus a skip:
+
+| Offer it as | Actually | Cost |
 |---|---|---|
-| YouTube | View and comment counts on videos about the topic | Free, about 3 minutes |
-| GitHub | Raises GitHub searches from 10 to 30 a minute | Free, about 1 minute, or instant if they use the `gh` command |
-| OpenCorporates | Checks whether a named company is officially registered, and since when | Free account |
-| Reddit API | Upvote and comment counts, and no one-search-a-minute limit | Free, but Reddit reviews new apps by hand, which can take days. Only worth it for heavy use |
-| Skip | Use gutcheck as is | none |
+| "See how many people watch videos about this. Good for anything consumer." | `YOUTUBE_API_KEY` | free, ~3 min |
+| "Check whether a company is really registered, and since when." | `OPENCORPORATES_API_TOKEN` | free account |
+| "Search GitHub 30 times a minute instead of 10. Only matters if you run a lot of checks." | `GITHUB_TOKEN` | free, ~1 min, instant if they use `gh` |
+| "Reddit upvote counts and no one-a-minute wait. Reddit approves these by hand, so it can take days." | `REDDIT_CLIENT_ID` + `SECRET` | slow, rarely worth it |
 
-If they skip, jump to step 5.
+Skipping is normal. Don't editorialize about it, just carry on.
 
-## 4. Get and save each chosen key
+### Getting one key
 
-Handle one key at a time: give the steps, wait for the key, save it, verify it.
+One at a time. Numbered steps, one screen.
 
-### Getting the key
+**YouTube:**
+1. Open https://console.cloud.google.com and sign in with any Google account.
+2. Project picker at the top, then **New project**. Name it anything.
+3. Open https://console.cloud.google.com/apis/library/youtube.googleapis.com and hit **Enable**.
+4. **APIs & Services → Credentials → Create credentials → API key**.
+5. Copy it. Starts with `AIza`. Free quota covers about 90 lookups a day.
 
-**YouTube (`YOUTUBE_API_KEY`)**
-1. Open https://console.cloud.google.com/ and sign in with any Google account.
-2. At the top, click the project picker, then **New project**. Name it "gutcheck" and create it.
-3. Open https://console.cloud.google.com/apis/library/youtube.googleapis.com and click **Enable**.
-4. Go to **APIs & Services → Credentials → Create credentials → API key**.
-5. Copy the key. It starts with `AIza`.
-The free quota is 10,000 units a day, which is about 90 YouTube lookups.
+**GitHub:** first try `gh auth token >/dev/null 2>&1 && echo HAS_GH`. If they're logged in, offer to reuse it (nothing to copy, nothing on screen) by passing `"$(gh auth token)"` as the value. Otherwise https://github.com/settings/personal-access-tokens/new, name it gutcheck, leave repository access on "Public repositories", generate.
 
-**GitHub (`GITHUB_TOKEN`)**
-- First run `gh auth token 2>/dev/null | head -c 4`. If that prints something, ask: "You're already logged in to GitHub's command-line tool. Want me to use that login for gutcheck?" If yes, save it without showing it: `gh auth token` piped into the save command below (replace the value argument with `"$(gh auth token)"`).
-- Otherwise: open https://github.com/settings/personal-access-tokens/new, name it "gutcheck", set an expiry, leave **Repository access** on "Public repositories", click **Generate token**, and copy it.
+**OpenCorporates:** https://opencorporates.com/api_accounts/new, free account, token on the account page.
 
-**OpenCorporates (`OPENCORPORATES_API_TOKEN`)**
-1. Open https://opencorporates.com/api_accounts/new and create a free account.
-2. Once approved, copy the API token from your account page.
+**Reddit:** https://www.reddit.com/prefs/apps while logged in → **create another app** → type **script** → redirect URI `http://localhost:8080`. The client ID is the short string under the app name. If Reddit makes you apply for access, submit it; gutcheck keeps using the free feed meanwhile, so nothing breaks.
 
-**Reddit (`REDDIT_CLIENT_ID` and `REDDIT_CLIENT_SECRET`)**
-1. Open https://www.reddit.com/prefs/apps while logged in and click **create another app**.
-2. Pick **script**, name it "gutcheck", set the redirect URI to `http://localhost:8080`, and create it.
-3. The client ID is the short string under the app name. The secret is labeled **secret**.
-4. If Reddit asks you to apply for API access, submit the form. Until you're approved, gutcheck keeps using the keyless Reddit feed, so nothing breaks.
+### Saving it
 
-### Saving the key
+Offer both routes in one line:
 
-Offer two ways and let the user choose:
+> Paste it here and I'll save it, or if you'd rather keep it out of the chat, I'll open the file and you paste it there.
 
-1. **Paste it here.** Mention that it will be in this chat's history. Save it with the command below. Never repeat the key back; confirm with the last 4 characters only.
-2. **Edit the file yourself** (keeps the key out of the chat). Run `open -e ~/.config/gutcheck/.env` on macOS, or tell them to open that file in any text editor. They paste the value after the matching `=` and save. Then they tell you they're done.
+File route: `open -e ~/.config/gutcheck/.env` on macOS, otherwise name the path. They paste after the matching `=`, save, tell you they're done.
 
-Save command (adds the key, or replaces it if one is already saved, and keeps the file private):
+Paste route, never repeating the key back:
 
 ```bash
 python3 - "YOUTUBE_API_KEY" "<value>" <<'PY'
@@ -87,28 +115,46 @@ path = os.path.expanduser("~/.config/gutcheck/.env")
 os.makedirs(os.path.dirname(path), exist_ok=True)
 lines = open(path).read().splitlines() if os.path.exists(path) else []
 lines = [l for l in lines if not l.strip().startswith(key + "=")] + [f"{key}={value}"]
-with open(path, "w") as f:
-    f.write("\n".join(lines) + "\n")
+open(path, "w").write("\n".join(lines) + "\n")
 os.chmod(path, 0o600)
 print(f"saved {key} (ending ...{value[-4:]})")
 PY
 ```
 
-### Verifying
+Confirm with the last four characters only, then prove it:
 
-Re-run the doctor (step 2) and confirm that source now shows `ok`. If it shows an error:
-- YouTube `403`: the API usually isn't enabled on that project yet (step 3 of the YouTube instructions), or it was enabled less than a few minutes ago.
-- GitHub `401`: the token was copied incompletely or has expired.
-- OpenCorporates "rejected": the account isn't approved yet or the token is wrong.
+```bash
+cd ~/.claude/skills/gutcheck && uv run server.py doctor 2>/dev/null | grep -i "<source>"
+```
 
-Keys are read fresh on every call, so there's no need to restart after saving one.
+If it errors: YouTube 403 usually means the API isn't enabled yet (step 3), or was enabled seconds ago. GitHub 401 means a truncated or expired token. OpenCorporates "rejected" means the account isn't approved yet. Keys are read on every call, so nothing needs restarting.
 
-## 5. Finish
+## 5. Now answer their question for real
 
-Say it's ready, in one line, then suggest three first checks tailored to anything you know about the user (fall back to these):
+The point of the whole walkthrough. Take what they said in step 1 and research it properly: `design.md`, then `research.md`, with the thinking out loud and a real report.
 
-- `/gutcheck is there demand for a simpler meal-planning app for busy parents?`
-- `/gutcheck freelancers keep getting paid late, how common is this and what actually works?`
-- `/gutcheck should I learn Rust or Go in 2026?`
+If the `mcp__gutcheck__*` tools aren't in this session, **use the terminal** rather than stopping:
 
-Mention that `--deep` pulls in more sources (YouTube, GitHub, App Store, Product Hunt) and that `/gutcheck upgrade` updates gutcheck.
+```bash
+cd ~/.claude/skills/gutcheck && uv run server.py call reddit_signal '{"query":"meal prep app","limit":10}'
+```
+
+One call per command, same data. Say once that restarting Claude Code makes them native and quicker, then get on with it. Never end setup on "restart and try again": they installed a research tool, so they should leave having had something researched.
+
+## 6. Leave them knowing what they have
+
+After the report, three short lines:
+
+> That's the whole thing. Next time just type `/gutcheck` and your question, the same way you asked this one.
+>
+> Add `--deep` when the decision is expensive and you want everything. For something bigger, say so and I'll design a proper study first: a case competition brief, a business plan, a market landscape, or a full write-up with method and sources.
+>
+> Everything stays on your machine. I keep what you check in `~/.config/gutcheck/history.jsonl`, so when you come back to a question I'll tell you what you found last time and what changed.
+
+## If they ask
+
+- **"Does this send my data anywhere?"** Your questions go from your machine to the sources being searched (Google, Reddit, Apple, and the sites in a web search), the same as typing them into a browser. No gutcheck server, no account, no analytics. Keys and history stay in `~/.config/gutcheck/`, readable only by you.
+- **"What does it cost?"** Nothing. Every default source is free and needs no key. The optional keys have free tiers.
+- **"How do I delete what it saved?"** `rm -rf ~/.config/gutcheck` removes the profile, history, and keys. Uninstall entirely with `claude mcp remove gutcheck --scope user && rm -rf ~/.claude/skills/gutcheck ~/.config/gutcheck`.
+- **"Why did the health check print a source twice?"** It lists the eight sources first, then the two optional keys that raise limits rather than adding a source.
+- **"Can I use this outside Claude Code?"** Yes, it's a standard MCP server; the README covers connecting Cursor, Codex, or Claude Desktop, though the research method itself is the Claude Code skill.
