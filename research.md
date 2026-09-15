@@ -171,7 +171,19 @@ If an update was flagged, put one line **below the Bottom line**, as the last th
 
 ## 6. Then actually talk about it
 
-The report is the middle of the conversation, not the end. Ask something specific to what you found, never a generic "thoughts?":
+The report is the middle of the conversation, not the end. Two things happen here, in this order.
+
+**First, offer where to take it next**, with AskUserQuestion, built from what you actually found rather than a standing menu:
+
+- Header: `Next`
+- Question: "Where do you want to take this?"
+- Options, the most useful first:
+  - **"Dig into <the specific open thread>"** — the one thing that would move the verdict.
+  - **"Check <the adjacent question the evidence raised>"** — often the sharper question they didn't ask.
+  - **"Save the report"** — writes it to `~/gutcheck-reports/`.
+  - **"That's enough"** — stop cleanly.
+
+**Then ask the human question**, specific to what you found, never a generic "thoughts?":
 
 - Verdict weaker than they hoped: "Does the flat search interest match what you're seeing, or do you have signals I can't see from here?"
 - Verdict strong: "The opening looks like the people who already tried and quit. Is that who you'd build for?"
