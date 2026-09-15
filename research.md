@@ -49,11 +49,13 @@ This is the difference between a research partner and a vending machine. As soon
 
 > Okay, this is interesting. Nobody on Reddit is asking for a better meal planner, but there are a dozen threads about giving up on the ones they tried. That's a retention problem, not a discovery problem.
 
-Then, if their own knowledge would change how you read it, ask **one** question and keep researching while they answer:
+Then, if their own knowledge would change how you read it, ask **one** question through AskUserQuestion (not as prose, which would strand them mid-study) and keep researching while they answer:
 
-> Have you talked to anyone who quit one of these apps? Data tells me they churn, not why.
+- Header: `Your read`
+- Question: "Have you talked to anyone who quit one of these apps? The data shows me they churn, not why."
+- Options: **"Yes, and here's what they said"** (they fill in the detail), **"No, going on instinct"**, **"Skip, just keep researching"**
 
-Skip the question when the evidence is clear or they've already told you.
+Skip it entirely when the evidence is clear or they've already told you. Never block on the answer: keep gathering while it sits there.
 
 ## 4. Think it through before you write anything
 
