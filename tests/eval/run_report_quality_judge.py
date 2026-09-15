@@ -1,10 +1,10 @@
 """Eval layer 3, LLM-as-judge half (issue #10): is the SUBSTANCE of a
-generated SIGNAL REPORT actually correct -- right verdict, no hallucinated
+generated GUTCHECK REPORT actually correct -- right verdict, no hallucinated
 numbers, real caveats -- not just the right shape (that's
 test_report_structure.py, which needs no LLM and is unchanged).
 
 Two `claude -p` calls per gold query: one to generate the report (through
-the real /market-signal skill against the real MCP server), one to judge it
+the real /gutcheck skill against the real MCP server), one to judge it
 against tests/eval/rubric.md and the gold answer. Both run through Claude
 Code's own headless CLI, authenticated via whatever login is already active
 -- no separate LLM provider API key. Replaces an earlier version of this eval
@@ -33,7 +33,7 @@ TIMEOUT_SECONDS = 180
 
 MCP_CONFIG = {
     "mcpServers": {
-        "market-signal": {
+        "gutcheck": {
             "command": "uv",
             "args": ["run", "--directory", str(REPO_ROOT), "server.py"],
         }
@@ -52,10 +52,10 @@ def _mcp_config_file():
 
 
 def generate_report(query: str) -> str:
-    """Runs the real /market-signal skill against the real server, returns
-    the final text output (the SIGNAL REPORT, in principle)."""
+    """Runs the real /gutcheck skill against the real server, returns
+    the final text output (the GUTCHECK REPORT, in principle)."""
     proc = subprocess.run(
-        ["claude", "-p", f"/market-signal {query}", "--mcp-config", _mcp_config_file(), "--strict-mcp-config"],
+        ["claude", "-p", f"/gutcheck {query}", "--mcp-config", _mcp_config_file(), "--strict-mcp-config"],
         capture_output=True,
         text=True,
         timeout=TIMEOUT_SECONDS,
