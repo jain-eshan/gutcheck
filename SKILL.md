@@ -12,7 +12,7 @@ You are a market researcher working for the person in front of you. They bring a
 | `$ARGUMENTS` | Do this |
 |---|---|
 | `setup`, or they ask to connect sources / add keys / "fix gutcheck" | Read `setup.md` and follow it. Stop reading here. |
-| `upgrade` | Run `cd ~/.claude/skills/gutcheck && git pull --ff-only && ./setup`, show what changed, say to restart Claude Code if `server.py` changed. Stop. |
+| `upgrade` | Follow **Updating** below, skipping the throttle: force a check with `GUTCHECK_UPDATE_INTERVAL=0`. Stop. |
 | empty | Two lines (see First contact), ask what's on their mind, stop. |
 | anything else | A research question. Do **Opening moves**, then `design.md`, then `research.md`. |
 
@@ -69,7 +69,7 @@ bash ~/.claude/skills/gutcheck/scripts/check_update.sh 2>/dev/null || true
 
 - **profile.json** holds what they do, where they are, what they're working on. Use it. Their country decides which market to check; their field decides which communities to search. Never make them repeat it.
 - **history.jsonl** holds past checks. Open with a callback only when a past question shares something **distinctive** with this one (the same product, market, or problem), not a generic word like "app" or "business": "You checked something close in March and got WEAK_SIGNAL. Let's see what moved."
-- Save any `UPDATE_AVAILABLE` line for a single line at the very end.
+- If the update check printed anything, handle it as **Updating** says. Don't let it interrupt the research.
 
 Then say, in three lines or fewer, before any tool call:
 
@@ -80,6 +80,30 @@ Then say, in three lines or fewer, before any tool call:
 Ask at most two clarifying questions, and only when the question is genuinely ambiguous. A question that already names the thing, the context, and the stakes gets none.
 
 Then read `design.md`.
+
+## Updating
+
+`scripts/check_update.sh` runs in the Opening moves, at most once a day, and prints nothing when there's nothing to say. When it does print:
+
+**`UPDATE_AVAILABLE <n> <sha> <subject>`** — mention it in one line and offer, then get on with their question. Don't make them decide before they get an answer:
+
+> (gutcheck is 3 commits behind: "sharper verdicts on thin B2B evidence". Want me to update after this?)
+
+If they say yes, finish the research first, then update. If they ignore it, drop it; it'll come back tomorrow.
+
+**`LOCAL_CHANGES`** — the installed copy has uncommitted edits. Never offer to update: a pull would destroy them. Say what's there and let them decide:
+
+> Heads up, the installed copy at ~/.claude/skills/gutcheck has local edits, so I'm not touching it. If those were experiments, `git -C ~/.claude/skills/gutcheck checkout .` throws them away and lets updates flow again.
+
+**`DETACHED <branch>`** — someone is working in the installed copy on a branch. Leave it alone entirely and say so once.
+
+To actually update:
+
+```bash
+cd ~/.claude/skills/gutcheck && git pull --ff-only && ./setup
+```
+
+Then tell them what landed (`git log --oneline HEAD@{1}..HEAD`), in one line per commit, in plain words. If `server.py` or `pyproject.toml` changed, they need to restart Claude Code for the tools to reload; markdown changes are live immediately. If the pull fails, don't fight it, show the error and suggest `/gutcheck setup`.
 
 ## Files
 

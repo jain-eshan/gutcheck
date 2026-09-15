@@ -199,7 +199,13 @@ Use the full path to `uv` (run `which uv` to find it), since desktop apps often 
 
 ## Update and uninstall
 
-Update from inside Claude Code with `/gutcheck upgrade`. gutcheck also checks for a new version at most once a day and mentions it under a report.
+gutcheck checks GitHub at most once a day when you run it. If there's something new it says so in one line and offers to update after answering your question, rather than interrupting it:
+
+```
+(gutcheck is 3 commits behind: "sharper verdicts on thin B2B evidence". Want me to update after this?)
+```
+
+Say yes and it runs the pull for you, then tells you what changed. Or update whenever you like with `/gutcheck upgrade`. If your copy has local edits, it won't touch them; it tells you instead.
 
 Uninstall:
 
@@ -257,7 +263,26 @@ uv sync --group dev && uv run pytest
 
 ## Contributing
 
-Issues and PRs are welcome, especially new keyless data sources, sharper interpretation rules in `SKILL.md`, and reports where gutcheck got the verdict wrong (paste the report and say why).
+Issues and PRs are welcome, especially new keyless data sources, sharper interpretation rules in the markdown, and reports where gutcheck got the verdict wrong (paste the report and say why).
+
+### Working on gutcheck itself
+
+Keep two copies. The one in `~/.claude/skills/gutcheck` is what Claude Code runs; leave it alone and let it update itself. Work somewhere else:
+
+```bash
+git clone https://github.com/jain-eshan/gutcheck.git ~/dev/gutcheck
+cd ~/dev/gutcheck && uv sync --group dev
+```
+
+Edit there, run `uv run pytest`, push, then let the installed copy pick it up the next time you run `/gutcheck` (or force it with `/gutcheck upgrade`). Editing the installed copy directly works but blocks updates, since a pull would overwrite your changes — the update check notices and refuses rather than clobbering.
+
+Most changes are markdown, not Python. The judgment lives in `SKILL.md` (voice, routing), `design.md` (how a study gets planned), `research.md` (how a report gets written), and `references/` (what it knows about reading evidence). A verdict that felt wrong is usually a paragraph in `references/research-craft.md`, not a code change.
+
+To try a change before pushing, point Claude Code at your dev copy for one session:
+
+```bash
+claude mcp add --scope local gutcheck-dev -- uv run --directory ~/dev/gutcheck server.py
+```
 
 gutcheck started as `market-signal-mcp`, a Google Trends wrapper for startup-idea checks. The install flow borrows from Garry Tan's [gstack](https://github.com/garrytan/gstack).
 
