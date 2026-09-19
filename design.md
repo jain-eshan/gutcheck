@@ -27,7 +27,19 @@ Read `references/study-types.md` and pick one. Nine archetypes, each with its ow
 - The question contains several genuinely separate questions.
 - They asked for depth: "properly", "deep dive", "full research", `--deep`.
 
-Say which one you picked and why, in one line. If it's a quick check, don't announce a methodology, just start.
+**Let them pick the depth.** Unless it's obviously a quick check, put the choice in front of them with AskUserQuestion before you research anything. Name the cost of each, because that's what they're actually choosing between:
+
+- Header: `Depth`
+- Question: "How far do you want me to take this?"
+- Options, recommended one first, drawn from what the question deserves:
+  - **"Quick check (~5 min)"** — one claim, search and community evidence, straight answer.
+  - **"Full validation (~20 min)"** — demand, who already serves it, the narrow group with the problem worst, what would kill it.
+  - **"Case-comp brief (~40 min)"** — industry structure, named players with figures, the recommendation and the rebuttals a jury will throw.
+  - **"Deep study (~45 min+)"** — research questions, method, findings, limitations, references.
+
+Swap in whichever four fit: a business plan, a landscape scan, a decision matrix, a trend watch. Mark the one you'd pick as `(Recommended)` and say in half a line why, so choosing is quick rather than homework.
+
+If they go quick, don't announce a methodology, just start.
 
 ## 3. Write the plan
 
@@ -58,9 +70,17 @@ You'll need to get:  <anything only they can find, if any>
 Effort:              <rough time, phases>
 ```
 
-Then ask exactly one question: anything to add or cut? Take the answer, adjust, and start. Don't wait for enthusiasm; a plan they don't object to is approved.
+Then hand them the plan as a choice, with AskUserQuestion:
 
-If you can't get an answer (a headless or scripted run with nobody there), don't stall and don't skip the question. State it, assume the most reasonable answer, label the assumption in one line, and carry on. Flag it again in the report's caveats, since a different answer may change the verdict.
+- Header: `Plan`
+- Question: "Here's what I'd run. Good to go, or want it pointed somewhere else?"
+- Options:
+  - **"Run it (Recommended)"**
+  - **"Focus on <the question you'd cut first>"** — drop the rest and go deeper on one thing.
+  - **"Add something"** — they name what's missing, and you fold it in.
+  - **"Go quicker"** — collapse to a quick check and one answer.
+
+Take the answer, adjust, start. If you can't get one (a headless or scripted run with nobody there), take the recommendation, say in one line which you took and why, and flag it in the report's caveats, since a different choice may change the verdict.
 
 Skip this display entirely for a quick check. Showing a plan for a ten-minute question is the kind of ceremony that makes people stop using a tool.
 
@@ -68,7 +88,11 @@ Skip this display entirely for a quick check. Showing a plan for a ten-minute qu
 
 Work through the plan question by question, batching tool calls within each phase. After each phase of a multi-phase study, say in two or three sentences what you now know and what it changes. Those checkpoints are what make a long study feel like working with someone instead of waiting on a machine.
 
-**Adapt out loud.** Evidence redirects a study all the time. When it does, say so and say why: "Question 2 is answered and it's a dead end. Nobody is switching from spreadsheets, so I'm dropping the pricing question and looking at why switching fails instead." A researcher who runs an obsolete plan to completion is following a script, not thinking.
+**Adapt out loud, and let them call it.** Evidence redirects a study all the time. When it does, say what you found and put the turn to them rather than quietly rewriting the plan:
+
+> Question 2 is answered and it's a dead end: nobody is switching from spreadsheets. I'd drop the pricing question and dig into why switching fails instead. Want me to, or stick to the plan?
+
+Offer it as a choice (follow the new thread / finish the original plan), take the recommendation if nobody answers, and never burn a turn asking about a change that doesn't cost them anything.
 
 **Stop when you have the answer.** If question 1 settles the decision, say so and skip the rest. Finishing a plan is not the goal; answering the decision is.
 

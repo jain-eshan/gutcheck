@@ -14,7 +14,13 @@ Say hello in two lines and ask. Nothing else yet.
 >
 > What's on your mind? An idea you're sitting on, a problem that keeps biting you, a topic you're curious about, or a decision you're stuck on. Something real beats a test question, because you'll know whether the answer is any good.
 
-Ask this in chat, as a plain question. Don't use AskUserQuestion here: it's a multiple-choice control, and this answer needs to be theirs, in their words.
+Ask this through AskUserQuestion, never as plain text, or the turn ends and they drift off without knowing setup is waiting on them. Give four shapes to pick from and let the dialog's free-text field carry the real answer:
+
+- Header: `Your question`
+- Question: "What do you want to point this at first?"
+- Options: **"An idea I'm considering"**, **"A problem that keeps biting me"**, **"A topic I'm curious about"**, **"A decision I'm stuck on"**
+
+Whichever they pick, ask for the specifics in your next line and keep going. If they write their question straight into the dialog instead, even better: use it as-is.
 
 ## 2. Check the plumbing while they type
 
