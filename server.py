@@ -780,7 +780,13 @@ if __name__ == "__main__":
         if len(args) < 2:
             raise SystemExit(f"usage: server.py call <tool> '<json params>'\ntools: {', '.join(TOOL_NAMES)}")
         call_tool(args[1], json.loads(args[2]) if len(args) > 2 else {})
+    elif args and args[0] == "serve":
+        # `serve [port]` - run as a web service so hosts that can't launch a local
+        # program (claude.ai, ChatGPT) can add it as a remote connector by URL.
+        mcp.settings.host = os.environ.get("HOST", "127.0.0.1")
+        mcp.settings.port = int(args[1]) if len(args) > 1 else int(os.environ.get("PORT", 8000))
+        mcp.run(transport="streamable-http")
     elif args:
-        raise SystemExit(f"usage: server.py [doctor | call <tool> '<json params>']")
+        raise SystemExit(f"usage: server.py [doctor | call <tool> '<json params>' | serve [port]]")
     else:
         mcp.run()

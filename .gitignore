@@ -2,3 +2,4 @@
 __pycache__/
 *.pyc
 mcpeval.secrets.yaml
+dist/

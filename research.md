@@ -23,6 +23,8 @@ Work out which kind of question this is. Read `references/playbooks.md` for the 
 
 ## 2. Gather, in one batch
 
+**Web-only mode?** If you have no gutcheck tools and no terminal (`SKILL.md`, "Check your instruments"), gather with web search using `references/web-only.md` instead of the tool list below, and follow its report changes.
+
 Call every tool you need **in the same turn**, web searches included. They don't depend on each other, and one batch keeps this fast.
 
 **Always:**
@@ -179,9 +181,11 @@ The report is the middle of the conversation, not the end. Ask something specifi
 
 Two exchanges at most, then wrap up. If they push into pricing, business models, or strategy, answer briefly from the evidence you have, say where the data stops, and name what they'd have to find out.
 
-If they ask to save or share it, write to `~/gutcheck-reports/<YYYY-MM-DD>-<slug>.md` (create the folder) and give them the path.
+If they ask to save or share it and you have a shell, write to `~/gutcheck-reports/<YYYY-MM-DD>-<slug>.md` (create the folder) and give them the path.
 
 ## 7. Save what happened
+
+Terminal only. With no shell, skip this section.
 
 After the conversation, append one line. Never rewrite the file.
 

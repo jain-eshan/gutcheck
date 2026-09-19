@@ -31,6 +31,20 @@ The setup script installs [uv](https://docs.astral.sh/uv/) if you don't have it,
 
 **Requirements:** macOS or Linux, [Claude Code](https://claude.com/claude-code), and `git`. Windows hasn't been tested yet; WSL is the likely route.
 
+## Other apps: Claude chat, ChatGPT
+
+Claude Code gets everything. Other apps can't run the local data tools, so gutcheck falls back to **web-only mode**: same study design and report, but the evidence comes from the app's own web search, and the report says so and caps its confidence. No Trends numbers, no Reddit upvotes.
+
+Run `python3 scripts/bundle.py` to build `dist/`:
+
+| App | Use |
+|---|---|
+| claude.ai / Claude desktop | Upload `dist/gutcheck-skill.zip` under Settings, Capabilities, Skills. |
+| ChatGPT | Create a Custom GPT. Paste `dist/chatgpt-instructions.txt` as its instructions, attach `dist/gutcheck-knowledge.md` as knowledge, turn on web search. |
+| Any other chat | Paste `dist/gutcheck-knowledge.md` at the start of the conversation and say "follow this". |
+
+For the full data outside Claude Code, run `uv run server.py serve 8000` and host it somewhere public. It speaks streamable HTTP MCP at `/mcp`, so it can be added as a remote connector. Untested when hosted: Google Trends and Reddit tend to block cloud IP addresses, so those two may fail there.
+
 ## Setup: `/gutcheck setup`
 
 Run this once after installing. It's a conversation, not a config file hunt:
