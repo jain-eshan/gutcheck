@@ -1,5 +1,5 @@
 """Contract tests for the plain-REST tools (company_registration, reddit_signal,
-builder_activity, news_coverage, app_store_apps, youtube_videos) and the key
+builder_activity, news_coverage, app_store_apps, play_store_search/reviews, youtube_videos) and the key
 lookup they share.
 
 Almost everything here fakes requests.get/post with canned responses instead of
@@ -258,6 +258,49 @@ def test_app_store_apps_field_mapping(monkeypatch):
         "last_updated": "2026-08-03", "url": "https://apps.apple.com/app/id1",
     }
     assert result[1]["rating"] is None and result[1]["released"] == ""
+
+
+# --- play_store_search / play_store_reviews --------------------------------
+
+
+def test_play_store_search_field_mapping(monkeypatch):
+    seen = {}
+
+    def fake_search(query, n_hits, lang, country):
+        seen.update(n_hits=n_hits, country=country)
+        return [{"appId": "com.x.app", "title": "X", "developer": "Dev", "score": 4.83, "installs": "1,000+"},
+                {"appId": "com.y.app", "title": "Y", "score": None}]
+
+    monkeypatch.setattr(server, "gp_search", fake_search)
+    result = server.play_store_search("physio", country="IN", limit=999)
+    assert seen == {"n_hits": 30, "country": "in"}
+    assert result[0] == {"app_id": "com.x.app", "title": "X", "developer": "Dev", "rating": 4.8,
+                         "installs": "1,000+", "url": "https://play.google.com/store/apps/details?id=com.x.app"}
+    assert result[1]["rating"] is None
+
+
+def test_play_store_reviews_mapping_cap_and_no_names(monkeypatch):
+    seen = {}
+
+    def fake_reviews(app_id, lang, country, sort, count):
+        seen.update(count=count, sort=sort)
+        return [{"userName": "Someone", "score": 2, "content": "too slow", "thumbsUpCount": 3,
+                 "at": datetime(2026, 9, 18, 23, 31), "reviewCreatedVersion": "4.39.0"}], None
+
+    monkeypatch.setattr(server, "gp_reviews", fake_reviews)
+    result = server.play_store_reviews("com.x.app", count=9999, sort="helpful")
+    assert seen == {"count": 200, "sort": server.Sort.RATING}
+    assert result == [{"rating": 2, "text": "too slow", "thumbs_up": 3, "date": "2026-09-18", "app_version": "4.39.0"}]
+
+
+def test_play_store_reviews_bad_sort_and_scraper_failure(monkeypatch):
+    assert "sort must be one of" in server.play_store_reviews("com.x.app", sort="bogus")
+
+    def boom(*a, **k):
+        raise RuntimeError("app not found")
+
+    monkeypatch.setattr(server, "gp_reviews", boom)
+    assert server.play_store_reviews("com.nope").startswith("Request failed")
 
 
 # --- handle_http_errors ----------------------------------------------------

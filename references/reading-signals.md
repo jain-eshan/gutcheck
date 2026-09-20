@@ -56,6 +56,17 @@ What the numbers mean, and the traps that make smart people wrong.
 
 **Traps:** ratings accumulate over years, so old apps look bigger than they are now. iOS only, US store by default, which skews against markets where Android dominates. Free apps collect more ratings than paid ones, so never read rating count as revenue.
 
+## Play Store (`play_store_search`, `play_store_reviews`)
+
+**What it is:** `play_store_search` lists who serves this need on Android, with `installs` as a bucketed user count. `play_store_reviews` returns recent reviews of one app, the closest thing to a live complaint box for a competitor.
+
+**Reading it:**
+- Tally themes across the sample: "~15 of 100 mention refunds" beats a cherry-picked quote. Sort by `newest` for what is broken now, `helpful` for what bothers the most people.
+- Low-star reviews (1-2) name the gaps an entrant could fill. High-star reviews name what to match, not beat.
+- A strong app with the same complaint repeated in dozens of reviews is an opening.
+
+**Traps:** `installs` is a bucket ("1,000,000+"), not a count. Reviews skew to the delighted and the furious, and a single sample of 100-200 is one app's recent users. Reviews are per store country and language, so a US sample says little about India. Reviewers who left rating-only reviews have empty `text`. The scraper reads Play Store pages, so it can break if Google changes them; a failure comes back as a message, so carry on.
+
 ## Hacker News + GitHub (`builder_activity`)
 
 **What it is:** whether builders are moving here. HN stories with points and comments; repositories with stars and last push.

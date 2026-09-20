@@ -141,6 +141,7 @@ The forks that matter:
 | The request is ambiguous | What decision this feeds, or which of two readings you should take |
 | Before researching anything bigger than a quick check | How deep to go, and which study shape (`design.md` step 4) |
 | The evidence redirects the study | Whether to follow the new thread or finish the original plan (`design.md` step 5) |
+| Consumer app idea, not a quick check | Whether to read Play Store reviews of similar apps (`research.md` step 2) |
 | After the report | Where to take it next (`research.md` step 6) |
 
 Rules that keep this from becoming a form:

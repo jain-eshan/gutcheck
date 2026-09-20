@@ -11,6 +11,7 @@ from urllib.parse import quote
 from xml.etree import ElementTree
 
 import requests
+from google_play_scraper import Sort, reviews as gp_reviews, search as gp_search
 from mcp.server.fastmcp import FastMCP
 from pytrends.request import TrendReq
 
@@ -666,6 +667,73 @@ def app_store_apps(query: str, country: str = "US", limit: int = 10) -> list:
 
 @mcp.tool()
 @handle_http_errors
+def play_store_search(query: str, country: str = "IN", lang: str = "en", limit: int = 5) -> list:
+    """Existing Android apps on Google Play matching a query - the Android counterpart to
+    app_store_apps, and the way to find an app_id for play_store_reviews. No setup needed.
+
+    Args:
+        query: what the app does, e.g. "physiotherapy at home".
+        country: ISO country code for the store, e.g. "IN" (default), "US".
+        lang: language code, e.g. "en".
+        limit: max apps, capped at 30.
+
+    Returns:
+        A list in Play Store relevance order, each with "app_id", "title", "developer",
+        "rating", "installs" (a bucket like "1,000,000+"), "url".
+    """
+    results = gp_search(query, n_hits=max(1, min(limit, 30)), lang=lang, country=(country or "IN").lower())
+    return [
+        {
+            "app_id": r.get("appId"),
+            "title": r.get("title"),
+            "developer": r.get("developer"),
+            "rating": round(r["score"], 1) if r.get("score") else None,
+            "installs": r.get("installs"),
+            "url": f"https://play.google.com/store/apps/details?id={r.get('appId')}",
+        }
+        for r in results
+    ]
+
+
+@mcp.tool()
+@handle_http_errors
+def play_store_reviews(app_id: str, country: str = "IN", lang: str = "en", count: int = 100, sort: str = "newest") -> list | str:
+    """Recent user reviews for one Google Play app - raw complaints and praise from people
+    already using something like the idea being researched. Returns reviews only; spotting
+    themes and judging sentiment is the caller's job. Optional: offer it, don't run it
+    unprompted. No setup needed.
+
+    Args:
+        app_id: package name from play_store_search, e.g. "com.example.app".
+        country: ISO country code for the store, e.g. "IN" (default), "US".
+        lang: language code, e.g. "en".
+        count: number of reviews, capped at 200.
+        sort: "newest" (default), "helpful" (most thumbs-up), or "relevant".
+
+    Returns:
+        A list of {"rating" (1-5), "text", "thumbs_up", "date", "app_version"}. Reviewer
+        names are dropped. Only the requested store and language are sampled.
+    """
+    sorts = {"newest": Sort.NEWEST, "helpful": Sort.RATING, "relevant": Sort.MOST_RELEVANT}
+    if sort not in sorts:
+        return f"sort must be one of {', '.join(sorts)}, got '{sort}'"
+    result, _ = gp_reviews(
+        app_id, lang=lang, country=(country or "IN").lower(), sort=sorts[sort], count=max(1, min(count, 200))
+    )
+    return [
+        {
+            "rating": r.get("score"),
+            "text": r.get("content"),
+            "thumbs_up": r.get("thumbsUpCount"),
+            "date": r["at"].date().isoformat() if r.get("at") else None,
+            "app_version": r.get("reviewCreatedVersion"),
+        }
+        for r in result
+    ]
+
+
+@mcp.tool()
+@handle_http_errors
 def youtube_videos(query: str, limit: int = 10, published_after_days: int | None = None) -> list | str:
     """YouTube videos matching a query, with view and comment counts - shows how much
     people watch content about a topic (tutorials, reviews, "I tried X" videos), which is
@@ -745,6 +813,7 @@ def doctor():
         ("Hacker News + GitHub", lambda: builder_activity("coffee"), None),
         ("Google News", lambda: news_coverage("coffee", limit=3), None),
         ("App Store", lambda: app_store_apps("coffee", limit=3), None),
+        ("Google Play", lambda: play_store_search("coffee", limit=3), None),
         ("YouTube", lambda: youtube_videos("coffee", limit=1), "YOUTUBE_API_KEY"),
         ("OpenCorporates", lambda: company_registration("Starbucks"), "OPENCORPORATES_API_TOKEN"),
     ]
@@ -768,7 +837,7 @@ def doctor():
 TOOL_NAMES = (
     "interest_over_time", "related_queries", "related_topics", "interest_by_region",
     "wikipedia_pageviews", "reddit_signal", "builder_activity", "news_coverage",
-    "app_store_apps", "youtube_videos", "company_registration",
+    "app_store_apps", "play_store_search", "play_store_reviews", "youtube_videos", "company_registration",
 )
 
 
