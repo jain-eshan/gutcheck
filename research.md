@@ -39,6 +39,7 @@ Call every tool you need **in the same turn**, web searches included. They don't
 - A question about a concept people read up on → `wikipedia_pageviews`.
 - TOPIC → `interest_over_time` with `timeframe="today 5-y"`, `response_format="full"`, so you can tell a fad from a trend.
 - A named company → `company_registration`.
+- **Competitor reviews (Play Store), only if they say yes.** When a consumer app could plausibly be built for Android, offer it through AskUserQuestion: header `App reviews`, question "Want me to read reviews of live Play Store apps that do something similar? It shows what their users complain about.", options **"Yes, pick apps for me"**, **"Yes, let me choose"**, **"No, skip"**. On yes, run `play_store_search` (short description of what the idea does, their country), and either take the top one or two or show the results and let them pick. Then `play_store_reviews` for each, `count=100`. Batch the search with the rest of the gather; the reviews call has to follow it because it needs the `app_id`. Skip the question on a quick check, and never run these unasked.
 - `--deep` → add `related_topics`, `interest_by_region` (needs a country), `builder_activity`, `app_store_apps`, `youtube_videos`, plus web searches on `site:producthunt.com` and review sites (G2, Trustpilot, app reviews) for what people complain about in existing tools.
 
 **Prune what didn't earn its place.** A source that came back empty, irrelevant, or simply dull does not get a paragraph in the report just because you called it. Drop it, and say in Caveats that it had nothing. Length is not thoroughness.
@@ -82,6 +83,7 @@ Cross the sources against each other rather than reading them in a line. Trends 
 - `isPartial: true` on the last Trends point means the period isn't over. Never call that a decline.
 - Trends is relative, 0-100. "Interest halved since March", never "50 searches".
 - Search interest up while Wikipedia reading is flat suggests hype without depth. The reverse suggests something real that nobody markets well.
+- Play Store reviews are a few hundred recent words from one app's users. Count themes ("~12 of 100 mention refunds") and quote sparingly; never present it as the whole market.
 - App Store `rating_count` is a rough user count. Several apps past 10k ratings means demand exists and competition is real.
 - Old, abandoned GitHub repos in a space mean people tried this and stopped. Ask why.
 

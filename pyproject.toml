@@ -4,6 +4,7 @@ version = "1.1.0"
 description = "Research buddy for Claude Code: check any idea, problem, or question against real-world signals"
 requires-python = ">=3.10"
 dependencies = [
+    "google-play-scraper>=1.2.7",
     "mcp[cli]",
     "pytrends",
 ]

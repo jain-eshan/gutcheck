@@ -190,6 +190,7 @@ For a small question it skips the ceremony entirely and just answers. For a big 
 | Wikipedia pageviews | Reading interest, a check on search hype | No |
 | Hacker News + GitHub | Are builders shipping in this space | No. Optional token raises GitHub's limit |
 | App Store | Who already serves this need, and how many people rate them | No |
+| Google Play | Android competitors, and what their users complain about in reviews (asks first) | No |
 | Web search | Competitors, surveys, forum threads, Product Hunt launches | No (built into Claude Code) |
 | YouTube | How much people watch content about it | Free key, about 3 minutes |
 | OpenCorporates | Is a named company officially registered, and since when | Free account |
