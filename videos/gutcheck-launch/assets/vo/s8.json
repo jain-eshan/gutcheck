@@ -1,0 +1,128 @@
+[
+  {
+    "text": "and",
+    "start": 0.1,
+    "end": 0.24,
+    "id": "w0"
+  },
+  {
+    "text": "you",
+    "start": 0.24,
+    "end": 0.46,
+    "id": "w1"
+  },
+  {
+    "text": "get",
+    "start": 0.46,
+    "end": 0.7,
+    "id": "w2"
+  },
+  {
+    "text": "a",
+    "start": 0.73,
+    "end": 0.8,
+    "id": "w3"
+  },
+  {
+    "text": "straight",
+    "start": 0.8,
+    "end": 1.44,
+    "id": "w4"
+  },
+  {
+    "text": "answer—a",
+    "start": 1.44,
+    "end": 2.14,
+    "id": "w5"
+  },
+  {
+    "text": "verdict,",
+    "start": 2.14,
+    "end": 2.94,
+    "id": "w6"
+  },
+  {
+    "text": "how",
+    "start": 2.94,
+    "end": 3.15,
+    "id": "w7"
+  },
+  {
+    "text": "sure",
+    "start": 3.15,
+    "end": 3.43,
+    "id": "w8"
+  },
+  {
+    "text": "it",
+    "start": 3.43,
+    "end": 3.57,
+    "id": "w9"
+  },
+  {
+    "text": "is,",
+    "start": 3.57,
+    "end": 3.81,
+    "id": "w10"
+  },
+  {
+    "text": "the",
+    "start": 3.85,
+    "end": 3.94,
+    "id": "w11"
+  },
+  {
+    "text": "case",
+    "start": 3.94,
+    "end": 4.11,
+    "id": "w12"
+  },
+  {
+    "text": "against",
+    "start": 4.12,
+    "end": 4.56,
+    "id": "w13"
+  },
+  {
+    "text": "it,",
+    "start": 4.56,
+    "end": 4.76,
+    "id": "w14"
+  },
+  {
+    "text": "and",
+    "start": 5.02,
+    "end": 5.12,
+    "id": "w15"
+  },
+  {
+    "text": "what",
+    "start": 5.12,
+    "end": 5.24,
+    "id": "w16"
+  },
+  {
+    "text": "to",
+    "start": 5.38,
+    "end": 5.4,
+    "id": "w17"
+  },
+  {
+    "text": "do",
+    "start": 5.4,
+    "end": 5.52,
+    "id": "w18"
+  },
+  {
+    "text": "this",
+    "start": 5.52,
+    "end": 5.74,
+    "id": "w19"
+  },
+  {
+    "text": "week.",
+    "start": 5.74,
+    "end": 6.18,
+    "id": "w20"
+  }
+]

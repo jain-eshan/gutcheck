@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>gutcheck launch</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Instrument Serif"; font-style: normal; font-weight: 400; src: url("assets/fonts/InstrumentSerif.ttf") format("truetype"); font-display: block; }
+      @font-face { font-family: "Instrument Serif"; font-style: italic; font-weight: 400; src: url("assets/fonts/InstrumentSerif-Italic.woff2") format("woff2"); font-display: block; }
+      @font-face { font-family: "Archivo"; font-style: normal; font-weight: 100 900; src: url("assets/fonts/Archivo.ttf") format("truetype"); font-display: block; }
+      :root { --paper: #EDEFE8; --ink: #12161B; --green: #1F8A5B; --lime: #B9E4A6; --coral: #E2603C; --muted: #5F675E; --term: #15171C; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--paper); }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; background: var(--paper); color: var(--ink); font-family: "Archivo", sans-serif; }
+      .layer { position: absolute; inset: 0; }
+      .serif { font-family: "Instrument Serif", serif; font-weight: 400; }
+      .center { position: absolute; left: 0; right: 0; text-align: center; }
+      .o { opacity: 0; }
+      .w { display: inline-block; opacity: 0; }
+      em { font-style: italic; }
+      #bg { background: radial-gradient(1000px 760px at 14% 10%, rgba(31,138,91,0.20), transparent 70%), radial-gradient(900px 760px at 90% 92%, rgba(226,96,60,0.16), transparent 70%), var(--paper); }
+      #grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(18,22,27,0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(18,22,27,0.045) 1px, transparent 1px); background-size: 48px 48px; }
+
+      /* hook */
+      #k-idea { top: 250px; font-size: 128px; }
+      #note { position: absolute; left: 610px; top: 470px; width: 700px; padding: 40px 48px 44px; border-radius: 10px; background: #FFF6C9; box-shadow: 0 30px 60px rgba(18,22,27,0.18); opacity: 0; }
+      #note .lb { font-size: 20px; font-weight: 800; letter-spacing: 0.24em; text-transform: uppercase; color: rgba(18,22,27,0.45); }
+      #note .tx { font-family: "Instrument Serif", serif; font-size: 58px; line-height: 1.05; margin-top: 14px; }
+      #k-want { top: 830px; font-size: 64px; }
+      #k-want em { color: var(--green); }
+      .tab { position: absolute; top: 250px; width: 340px; height: 470px; border-radius: 16px; background: #FFFFFF; box-shadow: 0 28px 60px rgba(18,22,27,0.17); overflow: hidden; opacity: 0; }
+      .tab .bar { height: 52px; display: flex; align-items: center; gap: 10px; padding: 0 18px; background: #F1F2EE; border-bottom: 1px solid rgba(18,22,27,0.08); font-size: 19px; font-weight: 700; color: rgba(18,22,27,0.7); }
+      .tab .dot { width: 14px; height: 14px; border-radius: 50%; }
+      .tab .bd { padding: 22px; }
+      .ln { height: 11px; border-radius: 6px; background: rgba(18,22,27,0.11); margin: 11px 0; }
+      .ln.b { background: rgba(18,22,27,0.5); height: 13px; }
+      .tlbl { position: absolute; top: 150px; width: 340px; text-align: center; font-family: "Instrument Serif", serif; font-size: 52px; opacity: 0; }
+      .spark { width: 100%; height: 150px; margin: 10px 0 18px; }
+      .row { display: flex; gap: 12px; align-items: center; margin: 14px 0; }
+      .ic { width: 46px; height: 46px; border-radius: 11px; flex: none; }
+      .row .ln { flex: 1; margin: 0; }
+      .vote { width: 26px; flex: none; font-size: 16px; font-weight: 800; color: var(--coral); text-align: center; }
+      #wall { position: absolute; inset: 0; }
+      .mini { position: absolute; width: 200px; height: 140px; border-radius: 12px; background: #fff; box-shadow: 0 12px 26px rgba(18,22,27,0.14); overflow: hidden; opacity: 0; }
+      .mini .bar { height: 26px; background: #F1F2EE; border-bottom: 1px solid rgba(18,22,27,0.08); font-size: 12px; font-weight: 700; padding: 6px 10px; color: rgba(18,22,27,0.6); white-space: nowrap; overflow: hidden; }
+      .mini .ln { margin: 9px 12px; height: 8px; }
+      #k-hours { top: 300px; font-size: 112px; }
+      #k-clock { top: 440px; font-size: 54px; font-weight: 800; letter-spacing: 0.06em; color: var(--muted); font-variant-numeric: tabular-nums; }
+      #k-hunch { top: 560px; font-size: 112px; }
+      #k-hunch em { color: var(--coral); }
+      #mark { position: absolute; left: 0; right: 0; top: 330px; display: flex; justify-content: center; align-items: center; gap: 30px; opacity: 0; }
+      .logo { width: 132px; height: 132px; border-radius: 34px; background: var(--ink); display: flex; align-items: center; justify-content: center; }
+      .logo svg { width: 86px; height: 86px; }
+      .word { font-size: 150px; font-weight: 800; letter-spacing: -0.045em; line-height: 1; }
+      .word b { color: var(--green); font-weight: 800; }
+      #k-tag { top: 545px; font-size: 64px; }
+      #k-sub { top: 650px; font-size: 30px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+
+      /* demo */
+      #device { position: absolute; left: 602px; top: 92px; width: 1268px; height: 890px; border-radius: 26px; background: #2A2D33; padding: 0 14px 14px; box-shadow: 0 50px 110px rgba(18,22,27,0.30); opacity: 0; }
+      #chrome { height: 48px; display: flex; align-items: center; gap: 10px; padding-left: 10px; }
+      #chrome i { width: 15px; height: 15px; border-radius: 50%; display: block; }
+      #chrome span { margin-left: 330px; font-family: Menlo, monospace; font-size: 17px; color: rgba(255,255,255,0.55); }
+      #screen { position: relative; width: 1240px; height: 828px; border-radius: 12px; overflow: hidden; background: var(--term); }
+      #cam { position: absolute; inset: 0; transform-origin: 0 0; }
+      #term { position: absolute; left: 0; top: 0; width: 100%; padding: 26px 34px; font-family: Menlo, "SF Mono", monospace; font-size: 19px; line-height: 28px; color: #D9DCD6; white-space: pre; }
+      #term .l { height: 28px; opacity: 0; }
+      .c-or { color: #E08B65; } .c-dim { color: #9AA096; } .c-ok { color: #7FCB97; } .c-hi { color: #FFFFFF; font-weight: 700; } .c-err { color: #F09A82; } .c-y { color: #E9D27A; }
+      .boxl { color: #9AA096; }
+      .vhl { position: absolute; left: 22px; border: 2px solid #7FCB97; border-radius: 7px; background: rgba(127,203,151,0.10); opacity: 0; transform-origin: left center; }
+      #cursor { display: inline-block; width: 12px; height: 24px; background: #D9DCD6; vertical-align: -4px; }
+      #panel { position: absolute; left: 72px; top: 92px; width: 490px; height: 890px; opacity: 0; }
+      .step { position: absolute; left: 0; top: 0; width: 490px; opacity: 0; }
+      .num { display: inline-flex; height: 44px; padding: 0 20px; border-radius: 30px; background: var(--ink); color: var(--paper); font-weight: 800; font-size: 18px; letter-spacing: 0.16em; text-transform: uppercase; align-items: center; }
+      .ttl { font-family: "Instrument Serif", serif; font-size: 64px; line-height: 1.0; margin-top: 22px; }
+      .how { font-size: 25px; line-height: 1.38; color: rgba(18,22,27,0.8); margin-top: 18px; }
+      .chips { display: flex; gap: 10px; margin-top: 22px; flex-wrap: wrap; }
+      .chip { height: 48px; padding: 0 18px; border-radius: 12px; background: #fff; border: 1px solid rgba(18,22,27,0.14); box-shadow: 0 3px 0 rgba(18,22,27,0.12); font-size: 21px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+      #st3chips .chip { opacity: 0; }
+      .chip.mono { font-family: Menlo, monospace; font-size: 20px; }
+      .chip .tick { color: var(--green); }
+      #cap { position: absolute; left: 0; top: 560px; width: 490px; }
+      .cg { position: absolute; left: 0; top: 0; width: 490px; font-size: 28px; line-height: 1.3; font-weight: 500; color: rgba(18,22,27,0.78); opacity: 0; }
+
+      /* trust + end */
+      #badges { position: absolute; left: 0; right: 0; top: 482px; display: flex; justify-content: center; gap: 36px; }
+      .badge { height: 116px; padding: 0 46px; border-radius: 60px; background: #fff; box-shadow: 0 20px 50px rgba(18,22,27,0.14); display: flex; align-items: center; font-family: "Instrument Serif", serif; font-size: 62px; opacity: 0; white-space: nowrap; }
+      .badge.hot { background: var(--green); color: #fff; }
+      #t-head { top: 270px; font-size: 30px; letter-spacing: 0.22em; text-transform: uppercase; font-weight: 800; color: var(--muted); }
+      #e-mark { position: absolute; left: 0; right: 0; top: 250px; display: flex; justify-content: center; align-items: center; gap: 30px; opacity: 0; }
+      #e-tag { top: 450px; font-size: 76px; }
+      #e-tag em { color: var(--green); }
+      #e-url { top: 600px; }
+      #e-url span { display: inline-block; padding: 16px 42px; border-radius: 60px; background: var(--ink); color: var(--paper); font-size: 44px; font-weight: 700; }
+      #e-sub { top: 715px; font-size: 27px; color: rgba(18,22,27,0.7); }
+      #e-by { top: 950px; font-size: 22px; letter-spacing: 0.26em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-width="1920" data-height="1080" data-duration="61.0">
+      <div class="layer" id="bg"><div id="grid"></div></div>
+
+      <div class="layer" id="hook">
+        <div class="center serif" id="k-idea"><span class="w">You've</span> <span class="w">got</span> <span class="w">an</span> <span class="w">idea.</span></div>
+        <div id="note"><div class="lb">Idea #14</div><div class="tx">An app that splits rent and bills between flatmates.</div></div>
+        <div class="center serif o" id="k-want">But does anyone <em>actually want it?</em></div>
+
+        <div class="tlbl" id="tl1" style="left:70px">Google Trends</div>
+        <div class="tab" id="t1" style="left:70px"><div class="bar"><div class="dot" style="background:#4C8BF5"></div>trends.google.com</div><div class="bd">
+          <svg class="spark" viewBox="0 0 300 150"><polyline points="0,120 30,110 60,116 90,95 120,100 150,70 180,84 210,60 240,72 270,48 300,58" fill="none" stroke="#4C8BF5" stroke-width="5" stroke-linejoin="round" /><polyline points="0,135 30,132 60,130 90,128 120,126 150,120 180,121 210,112 240,115 270,104 300,108" fill="none" stroke="#E2603C" stroke-width="5" stroke-linejoin="round" /></svg>
+          <div class="ln b" style="width:60%"></div><div class="ln"></div><div class="ln" style="width:80%"></div><div class="ln"></div><div class="ln" style="width:70%"></div></div></div>
+        <div class="tlbl" id="tl2" style="left:430px">Reddit</div>
+        <div class="tab" id="t2" style="left:430px"><div class="bar"><div class="dot" style="background:#FF5700"></div>reddit.com</div><div class="bd">
+          <div class="row"><div class="vote">▲</div><div class="ln b"></div></div><div class="ln"></div><div class="ln" style="width:75%"></div>
+          <div class="row"><div class="vote">▲</div><div class="ln b"></div></div><div class="ln"></div><div class="ln" style="width:85%"></div>
+          <div class="row"><div class="vote">▲</div><div class="ln b"></div></div><div class="ln"></div><div class="ln" style="width:60%"></div>
+          <div class="row"><div class="vote">▲</div><div class="ln b"></div></div><div class="ln" style="width:90%"></div></div></div>
+        <div class="tlbl" id="tl3" style="left:790px">The news</div>
+        <div class="tab" id="t3" style="left:790px"><div class="bar"><div class="dot" style="background:#34A853"></div>news.google.com</div><div class="bd">
+          <div class="row"><div class="ic" style="background:#D8DCD3"></div><div><div class="ln b" style="width:200px;margin:4px 0"></div><div class="ln" style="width:150px;margin:8px 0"></div></div></div>
+          <div class="row"><div class="ic" style="background:#E4D9C8"></div><div><div class="ln b" style="width:190px;margin:4px 0"></div><div class="ln" style="width:170px;margin:8px 0"></div></div></div>
+          <div class="row"><div class="ic" style="background:#D3DCE4"></div><div><div class="ln b" style="width:210px;margin:4px 0"></div><div class="ln" style="width:120px;margin:8px 0"></div></div></div>
+          <div class="row"><div class="ic" style="background:#E4D3D8"></div><div><div class="ln b" style="width:180px;margin:4px 0"></div><div class="ln" style="width:160px;margin:8px 0"></div></div></div>
+          <div class="row"><div class="ic" style="background:#DCE4D3"></div><div><div class="ln b" style="width:200px;margin:4px 0"></div><div class="ln" style="width:140px;margin:8px 0"></div></div></div></div></div>
+        <div class="tlbl" id="tl4" style="left:1150px">The App Store</div>
+        <div class="tab" id="t4" style="left:1150px"><div class="bar"><div class="dot" style="background:#0A84FF"></div>apps.apple.com</div><div class="bd">
+          <div class="row"><div class="ic" style="background:#1CC29F"></div><div class="ln b"></div></div>
+          <div class="row"><div class="ic" style="background:#7B61FF"></div><div class="ln b"></div></div>
+          <div class="row"><div class="ic" style="background:#FF8A3D"></div><div class="ln b"></div></div>
+          <div class="row"><div class="ic" style="background:#2E9BF0"></div><div class="ln b"></div></div>
+          <div class="row"><div class="ic" style="background:#F2C230"></div><div class="ln b"></div></div>
+          <div class="row"><div class="ic" style="background:#E84E8A"></div><div class="ln b"></div></div></div></div>
+        <div class="tlbl" id="tl5" style="left:1510px">GitHub</div>
+        <div class="tab" id="t5" style="left:1510px"><div class="bar"><div class="dot" style="background:#24292F"></div>github.com</div><div class="bd">
+          <div class="ln b" style="width:70%"></div><div class="ln" style="width:90%"></div><div class="ln" style="width:40%"></div><br />
+          <div class="ln b" style="width:55%"></div><div class="ln" style="width:85%"></div><div class="ln" style="width:35%"></div><br />
+          <div class="ln b" style="width:65%"></div><div class="ln" style="width:80%"></div><div class="ln" style="width:45%"></div></div></div>
+
+        <div id="wall" data-layout-allow-overlap></div>
+        <div class="center serif o" id="k-hours">Hours later,</div>
+        <div class="center o" id="k-clock">0:00</div>
+        <div class="center serif o" id="k-hunch">all you have is a <em>hunch.</em></div>
+
+        <div id="mark"><div class="logo"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="#B9E4A6" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" /></svg></div><div class="word">gut<b>check</b></div></div>
+        <div class="center serif o" id="k-tag">Check your gut against the internet.</div>
+        <div class="center o" id="k-sub">A free market researcher for Claude Code</div>
+      </div>
+
+      <div class="layer" id="demo">
+        <div id="panel">
+          <div class="step" id="st1"><div class="num">Step 1 of 4</div><div class="ttl">Ask in plain words.</div><div class="how">Type /gutcheck in Claude Code, then your idea, a problem you keep hitting, or a decision you're stuck on.</div><div class="chips"><div class="chip mono">/gutcheck</div><div class="chip">+ your idea</div></div></div>
+          <div class="step" id="st2"><div class="num">Step 2 of 4</div><div class="ttl">It plans the study.</div><div class="how">It works out what would actually answer the question, then picks the sources that can settle it.</div></div>
+          <div class="step" id="st3"><div class="num">Step 3 of 4</div><div class="ttl">It pulls live evidence.</div><div class="how" id="st3how">STEP3_HOW</div><div class="chips" id="st3chips"></div></div>
+          <div class="step" id="st4"><div class="num">Step 4 of 4</div><div class="ttl">You get a straight answer.</div><div class="how">A verdict, how sure it is, the case against it, and what to do this week. Every number traces to a source.</div></div>
+          <div id="cap"></div>
+        </div>
+        <div id="device"><div id="chrome"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i><span>claude — ~/ideas</span></div><div id="screen"><div id="cam"><div id="term" data-layout-allow-overflow></div></div></div></div>
+      </div>
+
+      <div class="layer" id="close">
+                <div id="badges"><div class="badge" id="bd1">Free</div><div class="badge" id="bd2">No API keys</div><div class="badge" id="bd3">Runs on your machine</div></div>
+        <div id="e-mark"><div class="logo"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="#B9E4A6" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" /></svg></div><div class="word">gut<b>check</b></div></div>
+        <div class="center serif o" id="e-tag">Check your gut <em>before you commit.</em></div>
+        <div class="center o" id="e-url"><span>github.com/jain-eshan/gutcheck</span></div>
+        <div class="center o" id="e-sub">Open source · A skill for Claude Code · macOS and Linux</div>
+        <div class="center o" id="e-by">Designed and built by Eshan Jain</div>
+      </div>
+
+      <audio id="mix" src="assets/audio/mix.wav" data-start="0" data-duration="61.0" data-track-index="5" data-volume="1"></audio>
+    </div>
+
+    <script>
+      const TL = {"words": [["You've", 0.36], ["got", 0.82], ["an", 1.08], ["idea.", 1.25], ["Before", 1.94], ["you", 2.25], ["spend", 2.43], ["three", 2.74], ["months", 2.99], ["building", 3.54], ["it,", 3.92], ["you", 4.14], ["want", 4.26], ["to", 4.5], ["know", 4.62], ["if", 4.86], ["anyone", 4.98], ["actually", 5.73], ["wants", 5.88], ["it.", 6.15], ["So", 6.89], ["you", 7.0], ["open", 7.22], ["Google", 7.53], ["Trends,", 7.97], ["then", 8.68], ["Reddit,", 8.99], ["then", 9.8], ["the", 9.99], ["news,", 10.23], ["the", 10.65], ["App", 10.78], ["Store,", 10.93], ["GitHub.", 11.42], ["Hours", 12.47], ["later,", 12.71], ["all", 13.42], ["you", 13.43], ["have", 13.65], ["is", 13.94], ["a", 14.06], ["hunch.", 14.15], ["Meet", 15.1], ["gutcheck.", 15.54], ["It", 16.68], ["checks", 16.74], ["your", 17.01], ["gut", 17.19], ["against", 17.35], ["the", 17.79], ["internet", 17.98], ["right", 18.54], ["inside", 18.85], ["Claude", 19.25], ["Code.", 19.72], ["Type", 21.03], ["/gutcheck", 21.39], ["and", 22.56], ["your", 22.73], ["idea", 23.06], ["in", 23.44], ["plain", 23.55], ["words.", 23.96], ["It", 25.24], ["works", 25.31], ["out", 25.58], ["what", 25.74], ["would", 25.96], ["actually", 26.23], ["answer", 26.71], ["the", 27.0], ["question", 27.28], ["and", 28.06], ["plans", 28.23], ["the", 28.72], ["study.", 28.89], ["Then", 30.03], ["it", 30.44], ["pulls", 30.45], ["live", 30.82], ["evidence", 31.12], ["from", 31.72], ["Google", 32.02], ["Trends,", 32.47], ["the", 32.99], ["news,", 33.2], ["both", 33.67], ["app", 33.99], ["stores,", 34.23], ["Hacker", 34.88], ["News,", 35.34], ["GitHub,", 35.96], ["and", 36.32], ["the", 36.44], ["web.", 36.72], ["And", 38.1], ["you", 38.24], ["get", 38.46], ["a", 38.73], ["straight", 38.8], ["answer.", 39.44], ["A", 39.44], ["verdict,", 40.14], ["how", 40.94], ["sure", 41.15], ["it", 41.43], ["is,", 41.57], ["the", 41.85], ["case", 41.94], ["against", 42.12], ["it,", 42.56], ["and", 43.02], ["what", 43.12], ["to", 43.38], ["do", 43.4], ["this", 43.52], ["week.", 43.74], ["It's", 49.34], ["free,", 49.79], ["no", 50.53], ["API", 50.78], ["keys,", 51.15], ["and", 51.78], ["it", 51.93], ["all", 52.03], ["runs", 52.18], ["on", 52.39], ["your", 52.48], ["machine.", 52.68], ["gutcheck", 54.25], ["is", 54.92], ["open", 55.07], ["source.", 55.42], ["Check", 56.29], ["your", 56.56], ["gut", 56.73], ["before", 56.89], ["you", 57.24], ["commit.", 57.38]], "marks": {"s2": 6.85, "s2end": 11.991, "s3": 12.35, "s3end": 14.633, "s4": 15.05, "demo": 20.6, "demoEnd": 48.9, "s9": 49.3, "s10": 54.2}, "steps": [[20.6, 25.099999999999998], [25.099999999999998, 29.8], [29.8, 37.8], [37.8, 48.9]], "end": 61.0}; // TL
+      const TERM = {"lines": [["<span class=\"boxl\">╭───────────────────────────────────────────────────╮</span>", 20.6, null], ["<span class=\"boxl\">│ </span><span class=\"c-or\">✻</span> Welcome to <span class=\"c-hi\">Claude Code</span>!                         <span class=\"boxl\">│</span>", 20.6, null], ["<span class=\"boxl\">│ </span>                                                  <span class=\"boxl\">│</span>", 20.6, null], ["<span class=\"boxl\">│ </span>  <span class=\"c-dim\">/help for help, /status for your current setup</span>  <span class=\"boxl\">│</span>", 20.6, null], ["<span class=\"boxl\">╰───────────────────────────────────────────────────╯</span>", 20.6, null], ["", 20.6, null], ["", 21.5, {"pre": "<span class=\"c-dim\">&gt; </span>", "text": "/gutcheck --deep is there demand for a simple app that splits rent and bills between flatmates?", "dur": 2.4, "hideCursor": 24.4}], ["", 24.5, null], ["<span class=\"c-or\">⏺ </span>I'll load the gutcheck tools and the design and research playbooks.", 25.35, null], ["<span class=\"c-or\">⏺ </span><span class=\"c-hi\">Read</span>(~/.claude/skills/gutcheck/design.md)", 25.8, null], ["  <span class=\"c-dim\">⎿  Read 111 lines</span>", 25.95, null], ["<span class=\"c-or\">⏺ </span><span class=\"c-hi\">Read</span>(~/.claude/skills/gutcheck/research.md)", 26.3, null], ["<span class=\"c-or\">⏺ </span><span class=\"c-hi\">Read</span>(~/.claude/skills/gutcheck/references/study-types.md)", 26.65, null], ["<span class=\"c-or\">⏺ </span><span class=\"c-hi\">Read</span>(~/.claude/skills/gutcheck/references/playbooks.md)", 26.95, null], ["", 27.25, null], ["<span class=\"c-or\">⏺ </span>This is an <span class=\"c-y\">IDEA</span> question, and <span class=\"c-y\">--deep</span> maps to the deep-study", 27.45, null], ["  archetype. I'll go straight to gathering, batching every relevant tool call.", 27.6, null], ["", 27.95, null], ["<span class=\"c-or\">⏺ </span><span class=\"c-hi\">gutcheck - interest_over_time</span><span class=\"c-dim\"> (MCP)(keywords: [\"splitwise\", \"split rent app\", \"bill splitting app\"…])</span>", 30.1, null], ["  <span class=\"c-dim\">⎿  </span><span class=\"c-ok\">splitwise: 17 in 2021 → 42 now, peak 68 · \"split rent app\": 0 to 15</span>", 30.4, null], ["<span class=\"c-or\">⏺ </span><span class=\"c-hi\">gutcheck - related_queries</span><span class=\"c-dim\"> (MCP)(keyword: \"splitwise\")</span>", 30.95, null], ["  <span class=\"c-dim\">⎿  </span><span class=\"c-ok\">\"splitwise free\" 42 · \"splitwise pro\" 29 · \"splitwise alternative\" 21</span>", 31.25, null], ["<span class=\"c-or\">⏺ </span><span class=\"c-hi\">gutcheck - news_coverage</span><span class=\"c-dim\"> (MCP)(query: \"bill splitting app\", recent: \"1y\")</span>", 31.8, null], ["  <span class=\"c-dim\">⎿  </span><span class=\"c-ok\">32 stories · \"Venmo Finally Launches An In-App Bill Splitting Feature\"</span>", 32.1, null], ["<span class=\"c-or\">⏺ </span><span class=\"c-hi\">gutcheck - app_store_apps</span><span class=\"c-dim\"> (MCP)(query: \"split rent bills roommates\", country: \"US\")</span>", 32.65, null], ["  <span class=\"c-dim\">⎿  </span><span class=\"c-ok\">Splitwise 4.0★ 29,827 · Livble 4.6★ 3,491 · Split 4.7★ 856</span>", 32.95, null], ["<span class=\"c-or\">⏺ </span><span class=\"c-hi\">gutcheck - play_store_search</span><span class=\"c-dim\"> (MCP)(query: \"split bills flatmates\", country: \"IN\")</span>", 33.5, null], ["  <span class=\"c-dim\">⎿  </span><span class=\"c-ok\">Splitwise 10,000,000+ installs · Splid 1,000,000+ · Split Bills 100,000+</span>", 33.8, null], ["<span class=\"c-or\">⏺ </span><span class=\"c-hi\">gutcheck - builder_activity</span><span class=\"c-dim\"> (MCP)(query: \"rent bill splitting app\")</span>", 34.35, null], ["  <span class=\"c-dim\">⎿  </span><span class=\"c-ok\">HN: 4 stories · \"Launch HN: YSplit (YC W19)\" 77 points · GitHub: 14 repos</span>", 34.65, null], ["<span class=\"c-or\">⏺ </span><span class=\"c-hi\">gutcheck - reddit_signal</span><span class=\"c-dim\"> (MCP)(query: \"splitwise alternative\")</span>", 35.2, null], ["  <span class=\"c-dim\">⎿  </span><span class=\"c-err\">Reddit's search feed returned an error. Carrying on without it.</span>", 35.5, null], ["<span class=\"c-or\">⏺ </span><span class=\"c-hi\">Web Search</span><span class=\"c-dim\">(\"Splitwise alternative reddit complaints 2026 free plan limit\")</span>", 36.05, null], ["  <span class=\"c-dim\">⎿  Did 1 search</span>", 36.35, null], ["", 36.55, null], ["<span class=\"c-or\">⏺ </span><span class=\"c-hi\">Nobody's missing a bill-splitter here — they're actively fleeing the one they have.</span>", 38.05, null], ["", 38.15, null], ["<span class=\"c-hi\">GUTCHECK REPORT — DEEP STUDY</span>", 38.4, null], ["<span class=\"c-dim\">════════════════════════════════════════════════════</span>", 38.47, null], ["Question:        Is there demand for a simple app that splits rent and bills between flatmates?", 38.54, null], ["Type:            IDEA", 38.61, null], ["Checking:        A new, simple flatmate rent/bill-splitting app has room to find real users in 2026.", 38.68, null], ["<span class=\"c-hi\">Verdict:</span>         <span class=\"c-y\">MODERATE_SIGNAL</span>", 38.75, null], ["<span class=\"c-hi\">Confidence:</span>      MEDIUM (5 independent sources, trailing 5 years + last 90 days, worldwide +", 38.82, null], ["                 US/IN app stores)", 38.89, null], ["", 38.96, null], ["FINDINGS", 39.03, null], ["1. Demand is real, not aspirational. … Challenger apps launched in 2023-2025 (Split Pay: 25,149", 39.1, null], ["   iOS ratings since Sept 2023; Tricount: 7,755; Splid: 4,237; Livble, rent-specific: 3,491)", 39.17, null], ["   have real, fast-growing user bases.", 39.24, null], ["2. The incumbent is loved for the idea, hated for the execution. Splitwise sits at 4.0★/4.3★", 39.31, null], ["   on the app stores but a brutal 1.8★ on Trustpilot (65% one-star).", 39.38, null], ["", 39.45, null], ["<span class=\"c-hi\">THE CASE AGAINST</span>", 39.52, null], ["Splitting bills has a hard network-effect problem: you can't switch alone, your flatmates have", 39.59, null], ["to come too, which is exactly why a 1.8-star incumbent still has 10M installs.", 39.66, null], ["", 39.73, null], ["<span class=\"c-hi\">Next steps:</span>", 39.8, null], ["- Read 100 recent App Store reviews on Livble and Splitkaro specifically …", 39.87, null], ["- Post in a renting/flatmate-specific community asking what they currently use …", 39.94, null], ["", 40.0, null], ["<span class=\"c-hi\">Bottom line: \"Yes, there's real demand — but it belongs to whoever builds the genuinely-free,</span>", 40.0, null], ["rent-specific, locally-paid version of Splitwise, not another generic clone of it.\"", 40.0, null]], "chips": [["Google Trends", 30.4], ["Google News", 32.1], ["App Store", 32.95], ["Google Play", 33.8], ["Hacker News + GitHub", 34.65], ["Web search", 36.35]], "how": "Google Trends, the news, the App Store and Google Play, Hacker News, GitHub and the web, all at once.", "scrolls": [[980, 40.8, 0.9], [988, 44.3, 2.8]], "verdict": [42, 41.15], "cam": [[1.45, -20, -110, 40.85, 0.8], [1.0, 0, 0, 44.0, 0.7]], "hls": [[42, 1, 470, 41.15], [61, 2, 1090, 46.5]]}; // TERM
+      const tl = gsap.timeline({ paused: true });
+      const pop = (sel, at, d = 0.4, from = { y: 30, scale: 0.92 }) => tl.fromTo(sel, { opacity: 0, ...from }, { opacity: 1, y: 0, x: 0, scale: 1, duration: d, ease: "back.out(1.8)", immediateRender: false }, at);
+      const out = (sel, at, d = 0.25) => tl.to(sel, { opacity: 0, duration: d, ease: "power2.in" }, at);
+      const W = (txt, after = 0) => { const w = TL.words.find(([x, t]) => t >= after && x.replace(/[^\w/]/g, "").toLowerCase() === txt.toLowerCase()); return w ? w[1] : null; };
+      const S = TL.marks;
+
+      // ---------- 1. Hook ----------
+      const iw = document.querySelectorAll("#k-idea .w");
+      ["You've", "got", "an", "idea"].forEach((x, i) => tl.fromTo(iw[i], { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.3, ease: "back.out(2.2)", immediateRender: i === 0 }, W(x)));
+      tl.fromTo("#note", { opacity: 0, y: 200, rotation: -9 }, { opacity: 1, y: 0, rotation: -2.5, duration: 0.55, ease: "back.out(1.5)", immediateRender: false }, W("before"));
+      pop("#k-want", W("anyone") - 0.1, 0.4);
+      out(["#k-idea", "#note", "#k-want"], S.s2 - 0.3, 0.25);
+      [["Trends", 1], ["Reddit", 2], ["news", 3], ["store", 4], ["GitHub", 5]].forEach(([x, n], i) => {
+        const t = W(x, S.s2) - (n === 4 ? 0.3 : 0.05);
+        const r = [-4, 3, -2, 4, -3][i];
+        tl.fromTo("#t" + n, { opacity: 0, y: 300, rotation: r * 3 }, { opacity: 1, y: 0, rotation: r, duration: 0.45, ease: "back.out(1.6)", immediateRender: false }, t);
+        pop("#tl" + n, t + 0.05, 0.35);
+      });
+      // more tabs keep opening
+      const wall = document.getElementById("wall");
+      const names = ["trends.google.com", "reddit.com/r/roommates", "news.google.com", "apps.apple.com", "github.com", "play.google.com", "news.ycombinator.com", "youtube.com", "en.wikipedia.org", "reddit.com/r/startups", "producthunt.com", "trends.google.com"];
+      let m = 0;
+      const wallAt = S.s2end + 0.05;
+      for (let r = 0; r < 6; r++) for (let c = 0; c < 8; c++) {
+        const d = document.createElement("div"); d.className = "mini"; d.id = "mi" + m;
+        d.style.left = (30 + c * 236 + (r % 2) * 60) + "px"; d.style.top = (14 + r * 176) + "px";
+        d.innerHTML = '<div class="bar">' + names[m % names.length] + "</div>" + '<div class="ln b" style="width:' + (50 + (m * 17) % 40) + '%"></div><div class="ln"></div><div class="ln" style="width:' + (55 + (m * 29) % 40) + '%"></div>';
+        wall.appendChild(d);
+        tl.fromTo(d, { opacity: 0, scale: 0.6, rotation: ((m * 7) % 11) - 5 }, { opacity: 1, scale: 1, duration: 0.28, ease: "back.out(1.6)", immediateRender: false }, wallAt + m * 0.018);
+        m++;
+      }
+      out(["#t1", "#t2", "#t3", "#t4", "#t5", "#tl1", "#tl2", "#tl3", "#tl4", "#tl5"], wallAt, 0.2);
+      tl.to("#wall", { filter: "blur(9px)", opacity: 0.3, duration: 0.4 }, S.s3 - 0.1);
+      pop("#k-hours", W("Hours", S.s3), 0.35);
+      tl.set("#k-clock", { opacity: 1 }, W("Hours", S.s3) + 0.1);
+      const clk = { v: 0 }; const clkEl = document.getElementById("k-clock");
+      tl.fromTo(clk, { v: 0 }, { v: 3 * 3600 + 42 * 60, duration: 1.6, ease: "power2.in", immediateRender: false, onUpdate: () => { const s = Math.round(clk.v); clkEl.textContent = Math.floor(s / 3600) + "h " + String(Math.floor(s / 60) % 60).padStart(2, "0") + "m"; } }, W("Hours", S.s3) + 0.1);
+      pop("#k-hunch", W("all", S.s3), 0.35);
+      for (let i = 0; i < m; i++) tl.to("#mi" + i, { y: 800, rotation: ((i * 13) % 30) - 15, opacity: 0, duration: 0.55, ease: "power2.in" }, S.s3end + 0.05 + (i % 8) * 0.03 + Math.floor(i / 8) * 0.02);
+      out(["#k-hours", "#k-clock", "#k-hunch"], S.s4 - 0.35, 0.2);
+      tl.fromTo("#mark", { opacity: 0, scale: 0.88 }, { opacity: 1, scale: 1, duration: 0.55, ease: "back.out(1.8)", immediateRender: false }, W("Meet", S.s4));
+      tl.fromTo("#mark .logo", { rotation: -20 }, { rotation: 0, duration: 0.7, ease: "back.out(2.5)", immediateRender: false }, W("Meet", S.s4));
+      pop("#k-tag", W("checks", S.s4), 0.4);
+      pop("#k-sub", W("Claude", S.s4), 0.4);
+      out(["#mark", "#k-tag", "#k-sub"], S.demo - 0.3, 0.25);
+
+      // ---------- 2. Demo ----------
+      tl.fromTo("#device", { opacity: 0, x: 300 }, { opacity: 1, x: 0, duration: 0.5, ease: "power3.out", immediateRender: false }, S.demo - 0.15);
+      tl.fromTo("#panel", { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 0.5, ease: "power3.out", immediateRender: false }, S.demo - 0.1);
+      document.getElementById("st3how").textContent = TERM.how;
+      const chipsEl = document.getElementById("st3chips");
+      TERM.chips.forEach(([name, at], i) => {
+        const c = document.createElement("div"); c.className = "chip"; c.innerHTML = '<span class="tick">✓</span>' + name; chipsEl.appendChild(c);
+        pop(c, at, 0.3, { y: 14, scale: 0.8 });
+      });
+      TL.steps.forEach(([a, b], i) => { const n = i + 1; pop("#st" + n, a + 0.05, 0.4, { y: 24 }); out("#st" + n, b - 0.2, 0.2); });
+
+      // terminal: real run, replayed
+      const term = document.getElementById("term");
+      const LH = 28, VIEW = 828 - 52;
+      TERM.lines.forEach(([html, at, typed], i) => {
+        const el = document.createElement("div"); el.className = "l"; term.appendChild(el);
+        if (typed) {
+          el.innerHTML = typed.pre + '<span class="ty"></span><span id="cursor"></span>';
+          const ty = el.querySelector(".ty"); const st = { n: 0 };
+          tl.set(el, { opacity: 1 }, at);
+          tl.fromTo(st, { n: 0 }, { n: typed.text.length, duration: typed.dur, ease: "none", immediateRender: false, onUpdate: () => { ty.textContent = typed.text.slice(0, Math.round(st.n)); } }, at + 0.1);
+          tl.set(el.querySelector("#cursor"), { opacity: 0 }, typed.hideCursor);
+        } else {
+          el.innerHTML = html;
+          tl.fromTo(el, { opacity: 0, x: -6 }, { opacity: 1, x: 0, duration: 0.12, ease: "power1.out", immediateRender: false }, at);
+        }
+        const y = Math.max(0, (i + 1) * LH - VIEW);
+        if (y > 0) tl.to(term, { y: -y, duration: 0.18, ease: "power2.out" }, at);
+      });
+      TERM.hls.forEach(([idx, n, w, at]) => {
+        const hl = document.createElement("div"); hl.className = "vhl"; term.appendChild(hl);
+        hl.style.top = (26 + idx * LH - 3) + "px"; hl.style.height = (n * LH + 6) + "px"; hl.style.width = w + "px";
+        tl.fromTo(hl, { opacity: 0, scaleX: 0.96 }, { opacity: 1, scaleX: 1, duration: 0.35, ease: "back.out(2)", immediateRender: false }, at);
+      });
+      TERM.scrolls.forEach(([y, at, d]) => tl.to(term, { y: -y, duration: d, ease: "power1.inOut" }, at));
+      TERM.cam.forEach(([s, x, y, at, d]) => tl.to("#cam", { scale: s, x: x, y: y, duration: d, ease: "power2.inOut" }, at));
+
+      // captions: one sentence at a time, words appear as they are spoken
+      const capEl = document.getElementById("cap");
+      const groups = []; let g = null;
+      TL.words.filter(([, t]) => t >= S.demo && t < S.demoEnd).forEach(([w, t]) => {
+        if (!g) { g = { a: t, ws: [] }; groups.push(g); }
+        g.ws.push([w, t]);
+        if (/[.?]$/.test(w)) g = null;
+      });
+      groups.forEach((it, i) => {
+        const nx = groups[i + 1];
+        const b = nx ? Math.min(nx.a, it.ws[it.ws.length - 1][1] + 2.4) : S.demoEnd - 0.1;
+        const el = document.createElement("div"); el.className = "cg"; capEl.appendChild(el);
+        it.ws.forEach(([w, t]) => {
+          const s = document.createElement("span"); s.className = "w"; s.textContent = w; el.appendChild(s); el.appendChild(document.createTextNode(" "));
+          tl.fromTo(s, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.15, ease: "power2.out", immediateRender: false }, t);
+        });
+        tl.set(el, { opacity: 1 }, it.a - 0.05);
+        tl.to(el, { opacity: 0, duration: 0.12 }, b - 0.12);
+      });
+      out("#panel", S.demoEnd - 0.2, 0.2);
+      tl.to("#device", { opacity: 0, y: 40, duration: 0.25, ease: "power2.in" }, S.demoEnd - 0.2);
+
+      // ---------- 3. Trust ----------
+      [["#bd1", W("free", S.s9)], ["#bd2", W("No", S.s9)], ["#bd3", W("runs", S.s9)]].forEach(([s, t]) => pop(s, t - 0.05, 0.4, { y: 40, scale: 0.7 }));
+      out(["#bd1", "#bd2", "#bd3"], S.s10 - 0.3, 0.2);
+
+      // ---------- 4. Close ----------
+      tl.fromTo("#e-mark", { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.8)", immediateRender: false }, S.s10 - 0.05);
+      pop("#e-url", W("open", S.s10), 0.45);
+      pop("#e-tag", W("Check", S.s10), 0.4);
+      pop("#e-sub", W("commit", S.s10), 0.4);
+      pop("#e-by", W("commit", S.s10) + 0.5, 0.4);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

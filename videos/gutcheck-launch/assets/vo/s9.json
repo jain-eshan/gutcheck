@@ -1,0 +1,74 @@
+[
+  {
+    "text": "It's",
+    "start": 0.04,
+    "end": 0.49,
+    "id": "w0"
+  },
+  {
+    "text": "free,",
+    "start": 0.49,
+    "end": 1.19,
+    "id": "w1"
+  },
+  {
+    "text": "no",
+    "start": 1.23,
+    "end": 1.48,
+    "id": "w2"
+  },
+  {
+    "text": "API",
+    "start": 1.48,
+    "end": 1.84,
+    "id": "w3"
+  },
+  {
+    "text": "keys,",
+    "start": 1.85,
+    "end": 2.48,
+    "id": "w4"
+  },
+  {
+    "text": "and",
+    "start": 2.48,
+    "end": 2.63,
+    "id": "w5"
+  },
+  {
+    "text": "it",
+    "start": 2.63,
+    "end": 2.73,
+    "id": "w6"
+  },
+  {
+    "text": "all",
+    "start": 2.73,
+    "end": 2.88,
+    "id": "w7"
+  },
+  {
+    "text": "runs",
+    "start": 2.88,
+    "end": 3.07,
+    "id": "w8"
+  },
+  {
+    "text": "on",
+    "start": 3.09,
+    "end": 3.18,
+    "id": "w9"
+  },
+  {
+    "text": "your",
+    "start": 3.18,
+    "end": 3.38,
+    "id": "w10"
+  },
+  {
+    "text": "machine.",
+    "start": 3.38,
+    "end": 3.8,
+    "id": "w11"
+  }
+]

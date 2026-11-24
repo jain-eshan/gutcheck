@@ -1,0 +1,80 @@
+[
+  {
+    "text": "It",
+    "start": 0.04,
+    "end": 0.11,
+    "id": "w0"
+  },
+  {
+    "text": "works",
+    "start": 0.11,
+    "end": 0.38,
+    "id": "w1"
+  },
+  {
+    "text": "out",
+    "start": 0.38,
+    "end": 0.54,
+    "id": "w2"
+  },
+  {
+    "text": "what",
+    "start": 0.54,
+    "end": 0.76,
+    "id": "w3"
+  },
+  {
+    "text": "would",
+    "start": 0.76,
+    "end": 1.03,
+    "id": "w4"
+  },
+  {
+    "text": "actually",
+    "start": 1.03,
+    "end": 1.47,
+    "id": "w5"
+  },
+  {
+    "text": "answer",
+    "start": 1.51,
+    "end": 1.8,
+    "id": "w6"
+  },
+  {
+    "text": "the",
+    "start": 1.8,
+    "end": 2.08,
+    "id": "w7"
+  },
+  {
+    "text": "question",
+    "start": 2.08,
+    "end": 2.45,
+    "id": "w8"
+  },
+  {
+    "text": "and",
+    "start": 2.86,
+    "end": 2.98,
+    "id": "w9"
+  },
+  {
+    "text": "plans",
+    "start": 3.03,
+    "end": 3.41,
+    "id": "w10"
+  },
+  {
+    "text": "the",
+    "start": 3.52,
+    "end": 3.69,
+    "id": "w11"
+  },
+  {
+    "text": "study.",
+    "start": 3.69,
+    "end": 4.04,
+    "id": "w12"
+  }
+]

@@ -10,7 +10,7 @@ Use the Voice from SKILL.md. Two rules matter most here: never read them a list 
 
 Say hello in two lines and ask. Nothing else yet.
 
-> I'm your research buddy. I check hunches against real data: search trends, what people say on Reddit, news, the App Store, GitHub, and the open web. Then I tell you what I think it means.
+> I'm your research buddy. I check hunches against real data: search trends, news, the App Store, GitHub, Hacker News and the open web. Then I tell you what I think it means.
 >
 > What's on your mind? An idea you're sitting on, a problem that keeps biting you, a topic you're curious about, or a decision you're stuck on. Something real beats a test question, because you'll know whether the answer is any good.
 
@@ -34,7 +34,7 @@ claude mcp get gutcheck 2>&1 | head -3
 cd ~/.claude/skills/gutcheck && uv run server.py doctor 2>/dev/null
 ```
 
-The doctor calls every source live. Usually about ten seconds, occasionally up to a minute when Reddit's free tier makes it wait.
+The doctor calls every source live. Usually about ten seconds.
 
 Handle the broken cases before anything else, and only mention what's broken:
 
@@ -82,7 +82,7 @@ When something does fit, offer it as what it gets them, never as a key name. One
 | "See how many people watch videos about this. Good for anything consumer." | `YOUTUBE_API_KEY` | free, ~3 min |
 | "Check whether a company is really registered, and since when." | `OPENCORPORATES_API_TOKEN` | free account |
 | "Search GitHub 30 times a minute instead of 10. Only matters if you run a lot of checks." | `GITHUB_TOKEN` | free, ~1 min, instant if they use `gh` |
-| "Reddit upvote counts and no one-a-minute wait. Reddit approves these by hand, so it can take days." | `REDDIT_CLIENT_ID` + `SECRET` | slow, rarely worth it |
+| "What people say on Reddit, with upvote counts. Reddit closed its free feed, so this is the only way to get Reddit. Reddit approves these by hand, so it can take days." | `REDDIT_CLIENT_ID` + `SECRET` | free, but approval can take days |
 
 Skipping is normal. Don't editorialize about it, just carry on.
 
@@ -101,7 +101,7 @@ One at a time. Numbered steps, one screen.
 
 **OpenCorporates:** https://opencorporates.com/api_accounts/new, free account, token on the account page.
 
-**Reddit:** https://www.reddit.com/prefs/apps while logged in → **create another app** → type **script** → redirect URI `http://localhost:8080`. The client ID is the short string under the app name. If Reddit makes you apply for access, submit it; gutcheck keeps using the free feed meanwhile, so nothing breaks.
+**Reddit:** https://www.reddit.com/prefs/apps while logged in → **create another app** → type **script** → redirect URI `http://localhost:8080`. The client ID is the short string under the app name. If Reddit makes you apply for access, submit it. Until it's approved, gutcheck skips Reddit and says so in the report, so nothing breaks.
 
 ### Saving it
 
@@ -160,7 +160,7 @@ After the report, three short lines:
 ## If they ask
 
 - **"Does this send my data anywhere?"** Your questions go from your machine to the sources being searched (Google, Reddit, Apple, and the sites in a web search), the same as typing them into a browser. No gutcheck server, no account, no analytics. Keys and history stay in `~/.config/gutcheck/`, readable only by you.
-- **"What does it cost?"** Nothing. Every default source is free and needs no key. The optional keys have free tiers.
+- **"What does it cost?"** Nothing. Every default source is free and needs no key. The optional keys, Reddit's included, have free tiers.
 - **"How do I delete what it saved?"** `rm -rf ~/.config/gutcheck` removes the profile, history, and keys. Uninstall entirely with `claude mcp remove gutcheck --scope user && rm -rf ~/.claude/skills/gutcheck ~/.config/gutcheck`.
 - **"Why did the health check print a source twice?"** It lists the eight sources first, then the two optional keys that raise limits rather than adding a source.
 - **"Can I use this outside Claude Code?"** Yes, it's a standard MCP server; the README covers connecting Cursor, Codex, or Claude Desktop, though the research method itself is the Claude Code skill.

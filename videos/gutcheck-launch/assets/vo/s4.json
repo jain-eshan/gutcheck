@@ -1,0 +1,86 @@
+[
+  {
+    "text": "Meet",
+    "start": 0.05,
+    "end": 0.49,
+    "id": "w0"
+  },
+  {
+    "text": "Gut",
+    "start": 0.49,
+    "end": 0.86,
+    "id": "w1"
+  },
+  {
+    "text": "Check.",
+    "start": 0.86,
+    "end": 1.58,
+    "id": "w2"
+  },
+  {
+    "text": "It",
+    "start": 1.63,
+    "end": 1.69,
+    "id": "w3"
+  },
+  {
+    "text": "checks",
+    "start": 1.69,
+    "end": 1.96,
+    "id": "w4"
+  },
+  {
+    "text": "your",
+    "start": 1.96,
+    "end": 2.14,
+    "id": "w5"
+  },
+  {
+    "text": "gut",
+    "start": 2.14,
+    "end": 2.3,
+    "id": "w6"
+  },
+  {
+    "text": "against",
+    "start": 2.3,
+    "end": 2.74,
+    "id": "w7"
+  },
+  {
+    "text": "the",
+    "start": 2.74,
+    "end": 2.93,
+    "id": "w8"
+  },
+  {
+    "text": "internet",
+    "start": 2.93,
+    "end": 3.16,
+    "id": "w9"
+  },
+  {
+    "text": "right",
+    "start": 3.49,
+    "end": 3.76,
+    "id": "w10"
+  },
+  {
+    "text": "inside",
+    "start": 3.8,
+    "end": 4.2,
+    "id": "w11"
+  },
+  {
+    "text": "Claude",
+    "start": 4.2,
+    "end": 4.59,
+    "id": "w12"
+  },
+  {
+    "text": "Code.",
+    "start": 4.67,
+    "end": 5.06,
+    "id": "w13"
+  }
+]
