@@ -441,8 +441,9 @@ def reddit_signal(query: str, subreddits: list[str] | None = None, limit: int = 
     """What real people on Reddit are saying, asking, or complaining about - qualitative
     community signal, as opposed to Trends/Wikipedia's passive search/reading numbers.
 
-    Works with no setup via Reddit's public search feed (which returns post text but not
-    scores, and rate-limits after a burst of requests). If REDDIT_CLIENT_ID and
+    Without keys it tries Reddit's public search feed (post text but no scores, about one
+    search a minute). Reddit closed that feed in Nov 2026, so keyless calls now return an
+    error string with the options; do not retry them. If REDDIT_CLIENT_ID and
     REDDIT_CLIENT_SECRET are saved via `/gutcheck setup`, uses the official API instead,
     which adds score and comment counts.
 
@@ -497,6 +498,17 @@ def reddit_signal(query: str, subreddits: list[str] | None = None, limit: int = 
     if resp.status_code == 429 and reset.isdigit() and int(reset) <= 60:
         time.sleep(int(reset) + 1)
         resp = requests.get(base, params=params, headers={"User-Agent": USER_AGENT}, timeout=15)
+    # Since Nov 2026 Reddit answers every keyless feed (search and plain subreddit
+    # listings alike) with 404 "Not Found". The generic "Not found: <url>" reads like a
+    # bad query, so say what actually happened and how to get Reddit data instead.
+    if resp.status_code in (403, 404):
+        return (
+            f"Reddit's keyless feed is closed (it answered {resp.status_code} for this search, and "
+            "Reddit now does this for every keyless request). No Reddit data came back. Options: "
+            "save REDDIT_CLIENT_ID and REDDIT_CLIENT_SECRET via `/gutcheck setup` to use Reddit's "
+            f"official API, or web-search `site:reddit.com {query}` and label those quotes as web "
+            "results, without upvote counts."
+        )
     resp.raise_for_status()
     atom = "{http://www.w3.org/2005/Atom}"
     records = []

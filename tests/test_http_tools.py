@@ -160,6 +160,31 @@ def test_reddit_signal_waits_out_one_429_then_retries(monkeypatch):
     assert [r["subreddit"] for r in result] == ["productivity"]
 
 
+# Reddit's reply to every keyless feed (search and plain subreddit listings alike)
+# as of 24 Nov 2026: a 404 with an Atom body titled "Not Found".
+REDDIT_CLOSED_FEED = b"""<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+<id>https://rss.reddit.com/</id>
+<title>Not Found</title>
+</feed>"""
+
+
+@pytest.mark.parametrize("status", [403, 404])
+def test_reddit_signal_keyless_feed_closed_says_so_and_gives_options(monkeypatch, status):
+    """The launch run got "Not found: <url>" three times, which reads like a bad
+    query. The tool must say Reddit closed the keyless feed and name the ways out."""
+    monkeypatch.setattr(
+        server.requests, "get",
+        lambda url, **kwargs: FakeResponse(url, status_code=status, content=REDDIT_CLOSED_FEED),
+    )
+    monkeypatch.setattr(server.requests, "post", no_network)
+    result = server.reddit_signal("splitwise alternative", subreddits=["roommates"])
+    assert isinstance(result, str)
+    assert not result.startswith("Not found")
+    assert "REDDIT_CLIENT_ID" in result and "/gutcheck setup" in result
+    assert "site:reddit.com splitwise alternative" in result
+
+
 # --- builder_activity ------------------------------------------------------
 
 
