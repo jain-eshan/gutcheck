@@ -1,0 +1,86 @@
+[
+  {
+    "text": "So",
+    "start": 0.04,
+    "end": 0.15,
+    "id": "w0"
+  },
+  {
+    "text": "you",
+    "start": 0.15,
+    "end": 0.37,
+    "id": "w1"
+  },
+  {
+    "text": "open",
+    "start": 0.37,
+    "end": 0.65,
+    "id": "w2"
+  },
+  {
+    "text": "Google",
+    "start": 0.68,
+    "end": 1.12,
+    "id": "w3"
+  },
+  {
+    "text": "Trends,",
+    "start": 1.12,
+    "end": 1.76,
+    "id": "w4"
+  },
+  {
+    "text": "then",
+    "start": 1.83,
+    "end": 2.14,
+    "id": "w5"
+  },
+  {
+    "text": "Reddit,",
+    "start": 2.14,
+    "end": 2.9,
+    "id": "w6"
+  },
+  {
+    "text": "then",
+    "start": 2.95,
+    "end": 3.14,
+    "id": "w7"
+  },
+  {
+    "text": "the",
+    "start": 3.14,
+    "end": 3.38,
+    "id": "w8"
+  },
+  {
+    "text": "news,",
+    "start": 3.38,
+    "end": 3.8,
+    "id": "w9"
+  },
+  {
+    "text": "the",
+    "start": 3.8,
+    "end": 3.93,
+    "id": "w10"
+  },
+  {
+    "text": "app",
+    "start": 3.93,
+    "end": 4.08,
+    "id": "w11"
+  },
+  {
+    "text": "store,",
+    "start": 4.08,
+    "end": 4.57,
+    "id": "w12"
+  },
+  {
+    "text": "GitHub.",
+    "start": 4.57,
+    "end": 5.02,
+    "id": "w13"
+  }
+]

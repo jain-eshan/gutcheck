@@ -1,0 +1,122 @@
+[
+  {
+    "text": "You've",
+    "start": 0.06,
+    "end": 0.52,
+    "id": "w0"
+  },
+  {
+    "text": "got",
+    "start": 0.52,
+    "end": 0.78,
+    "id": "w1"
+  },
+  {
+    "text": "an",
+    "start": 0.78,
+    "end": 0.95,
+    "id": "w2"
+  },
+  {
+    "text": "idea.",
+    "start": 0.95,
+    "end": 1.58,
+    "id": "w3"
+  },
+  {
+    "text": "Before",
+    "start": 1.64,
+    "end": 1.95,
+    "id": "w4"
+  },
+  {
+    "text": "you",
+    "start": 1.95,
+    "end": 2.13,
+    "id": "w5"
+  },
+  {
+    "text": "spend",
+    "start": 2.13,
+    "end": 2.44,
+    "id": "w6"
+  },
+  {
+    "text": "three",
+    "start": 2.44,
+    "end": 2.69,
+    "id": "w7"
+  },
+  {
+    "text": "months",
+    "start": 2.69,
+    "end": 3.24,
+    "id": "w8"
+  },
+  {
+    "text": "building",
+    "start": 3.24,
+    "end": 3.62,
+    "id": "w9"
+  },
+  {
+    "text": "it,",
+    "start": 3.62,
+    "end": 3.78,
+    "id": "w10"
+  },
+  {
+    "text": "you",
+    "start": 3.84,
+    "end": 3.96,
+    "id": "w11"
+  },
+  {
+    "text": "want",
+    "start": 3.96,
+    "end": 4.2,
+    "id": "w12"
+  },
+  {
+    "text": "to",
+    "start": 4.2,
+    "end": 4.32,
+    "id": "w13"
+  },
+  {
+    "text": "know",
+    "start": 4.32,
+    "end": 4.56,
+    "id": "w14"
+  },
+  {
+    "text": "if",
+    "start": 4.56,
+    "end": 4.68,
+    "id": "w15"
+  },
+  {
+    "text": "anyone",
+    "start": 4.68,
+    "end": 4.9,
+    "id": "w16"
+  },
+  {
+    "text": "actually",
+    "start": 5.43,
+    "end": 5.52,
+    "id": "w17"
+  },
+  {
+    "text": "wants",
+    "start": 5.58,
+    "end": 5.84,
+    "id": "w18"
+  },
+  {
+    "text": "it.",
+    "start": 5.85,
+    "end": 6.1,
+    "id": "w19"
+  }
+]

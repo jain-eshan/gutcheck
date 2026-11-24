@@ -840,7 +840,7 @@ def doctor():
             print(f"[ok]       {name}")
     for label, key, adds in (
         ("GitHub token", "GITHUB_TOKEN", "raises GitHub search to 30/min"),
-        ("Reddit API", "REDDIT_CLIENT_ID", "adds scores, removes the 1/min wait"),
+        ("Reddit API", "REDDIT_CLIENT_ID", "needed for Reddit since its keyless feed closed"),
     ):
         status = "saved" if get_key(key) else "optional"
         print(f"[{status}]{' ' * (6 if status == 'saved' else 4)}{label}: {adds} ({key})")

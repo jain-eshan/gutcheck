@@ -1,0 +1,62 @@
+[
+  {
+    "text": "Type",
+    "start": 0.03,
+    "end": 0.32,
+    "id": "w0"
+  },
+  {
+    "text": "slash",
+    "start": 0.39,
+    "end": 0.77,
+    "id": "w1"
+  },
+  {
+    "text": "gut",
+    "start": 0.77,
+    "end": 1.03,
+    "id": "w2"
+  },
+  {
+    "text": "check",
+    "start": 1.03,
+    "end": 1.24,
+    "id": "w3"
+  },
+  {
+    "text": "and",
+    "start": 1.56,
+    "end": 1.73,
+    "id": "w4"
+  },
+  {
+    "text": "your",
+    "start": 1.73,
+    "end": 2.06,
+    "id": "w5"
+  },
+  {
+    "text": "idea",
+    "start": 2.06,
+    "end": 2.33,
+    "id": "w6"
+  },
+  {
+    "text": "in",
+    "start": 2.44,
+    "end": 2.55,
+    "id": "w7"
+  },
+  {
+    "text": "plain",
+    "start": 2.55,
+    "end": 2.96,
+    "id": "w8"
+  },
+  {
+    "text": "words.",
+    "start": 2.96,
+    "end": 3.41,
+    "id": "w9"
+  }
+]

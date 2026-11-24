@@ -13,7 +13,9 @@ It scales with the stakes. A hunch gets ten minutes and a straight answer. A cas
 /gutcheck should I learn Rust or Go in 2026?
 ```
 
-Free and open source. Works with no API keys. Everything runs on your machine.
+Free and open source. Most sources work with no API keys; Reddit needs your own (see [Sources](#sources)). Everything runs on your machine.
+
+Watch the 61-second demo: [youtu.be/Nb1n2udLX9w](https://youtu.be/Nb1n2udLX9w)
 
 ## Install (30 seconds)
 
@@ -185,7 +187,7 @@ For a small question it skips the ceremony entirely and just answers. For a big 
 | Source | What it tells you | Key needed? |
 |---|---|---|
 | Google Trends | Is search interest rising or falling, what related searches are breaking out, where | No |
-| Reddit | What people actually say, ask, and complain about, in their own words | No (1 search a minute). Optional key removes the limit |
+| Reddit | What people actually say, ask, and complain about, in their own words | Yes. Reddit closed its keyless feed in November 2026, so Reddit only works with your own API keys |
 | Google News | Is the press covering it, and what angle it takes | No |
 | Wikipedia pageviews | Reading interest, a check on search hype | No |
 | Hacker News + GitHub | Are builders shipping in this space | No. Optional token raises GitHub's limit |
@@ -235,7 +237,7 @@ gutcheck has no server, account, or analytics. Your questions go only to the sou
 ## Known limits
 
 - **Google Trends has no official API.** gutcheck uses [pytrends](https://github.com/GeneralMills/pytrends), which reads the public site. If you run many checks back to back, Google may block you for a few minutes. The report marks that source as unavailable and carries on.
-- **Keyless Reddit allows one search a minute.** gutcheck waits it out, so a report can take about a minute. A Reddit API key removes the limit, but Reddit reviews new API apps by hand, which can take days.
+- **Reddit needs your own API keys.** Reddit closed its keyless feeds in November 2026. Without keys, gutcheck says Reddit is unavailable and leans on the other sources, or on a `site:reddit.com` web search labelled as web results. Reddit reviews new API apps by hand, which can take days.
 - **Trends numbers are relative (0-100), not search counts.** The report treats them that way.
 - **OpenCorporates covers registration facts only**, never funding or revenue. No free source for that exists.
 
@@ -255,6 +257,7 @@ server.py                 MCP server: 11 tools that fetch raw data, no interpret
 setup                     installer (uv, dependencies, MCP registration, settings file)
 tests/                    contract tests (mocked or recorded, no network)
 tests/eval/               report-structure checks plus evals that run through `claude -p`
+videos/gutcheck-launch/   the launch demo video's sources and build scripts
 ```
 
 The tools also run from a terminal, which is how setup can research something in the
@@ -275,6 +278,10 @@ Run the tests:
 ```bash
 uv sync --group dev && uv run pytest
 ```
+
+## Demo video
+
+The [61-second demo](https://youtu.be/Nb1n2udLX9w) is a [HyperFrames](https://hyperframes.heygen.com) project in `videos/gutcheck-launch/`. It replays a real run, `/gutcheck --deep is there demand for a simple app that splits rent and bills between flatmates?`, in a drawn Claude Code terminal, and every number on screen comes from that run. The narration is Kokoro, a free voice model that runs locally. `videos/gutcheck-launch/README.md` has the story, the script and the rebuild steps. The run's raw output, the narration audio, the music and the renders are not in git.
 
 ## Contributing
 
