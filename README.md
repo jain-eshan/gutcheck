@@ -232,7 +232,9 @@ claude mcp remove gutcheck --scope user && rm -rf ~/.claude/skills/gutcheck ~/.c
 
 ## Privacy
 
-gutcheck has no server, account, or analytics. Your questions go only to the sources listed above, straight from your machine. API keys stay in `~/.config/gutcheck/.env` (readable only by you). Your history stays in `~/.config/gutcheck/history.jsonl`.
+gutcheck has no server or account. Your questions go only to the sources listed above, straight from your machine.
+
+Usage counting is off unless you turn it on. `/gutcheck setup` asks once at the end. If you say yes, each time gutcheck uses a source it sends that source's name, gutcheck's version and a random id to PostHog, so I can see that people use it and which sources matter. It never sends your question, the results, or anything about your computer ([the code](server.py), search for `ping`). To turn it on yourself, add `GUTCHECK_TELEMETRY_ID=<any random text>` to `~/.config/gutcheck/.env`. To turn it off, delete that line. API keys stay in `~/.config/gutcheck/.env` (readable only by you). Your history stays in `~/.config/gutcheck/history.jsonl`.
 
 ## Known limits
 
