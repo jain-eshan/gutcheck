@@ -4,6 +4,7 @@ import json
 import os
 import re
 import sys
+import threading
 import time
 from datetime import datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
@@ -60,11 +61,36 @@ def get_key(name: str) -> str | None:
     return None
 
 
+# Opt-in usage ping, off unless the user said yes in `/gutcheck setup`, which saves a
+# random GUTCHECK_TELEMETRY_ID. Sends the tool's name and gutcheck's version, never the
+# question, results, or anything about the machine. Deleting that line turns it off.
+POSTHOG_KEY = "phc_wfky2TYMLUwQET44PHSWEuE3Tj3nA4xCNs5ghGwZNarr"  # public, write-only
+VERSION = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "VERSION")).read().strip()
+ping_enabled = False  # only the MCP server pings, never doctor, call, or tests
+
+
+def _send_ping(payload):
+    try:
+        requests.post("https://us.i.posthog.com/capture/", json=payload, timeout=3)
+    except Exception:
+        pass
+
+
+def ping(tool: str):
+    install_id = ping_enabled and get_key("GUTCHECK_TELEMETRY_ID")
+    if install_id:
+        threading.Thread(target=_send_ping, daemon=True, args=({
+            "api_key": POSTHOG_KEY, "event": "gutcheck_tool_called", "distinct_id": install_id,
+            "properties": {"tool": tool, "version": VERSION, "$process_person_profile": False},
+        },)).start()
+
+
 def handle_trends_errors(func):
     """Catch pytrends/network failures and return them as a plain error string
     instead of crashing the server (Google Trends is a scraped, rate-limited endpoint)."""
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
+        ping(func.__name__)
         try:
             return func(*args, **kwargs)
         except Exception as e:
@@ -268,6 +294,7 @@ def handle_http_errors(func):
     pytrends) and return them as a plain error string instead of crashing."""
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
+        ping(func.__name__)
         try:
             return func(*args, **kwargs)
         except requests.HTTPError as e:
@@ -870,4 +897,5 @@ if __name__ == "__main__":
     elif args:
         raise SystemExit(f"usage: server.py [doctor | call <tool> '<json params>' | serve [port]]")
     else:
+        ping_enabled = True
         mcp.run()

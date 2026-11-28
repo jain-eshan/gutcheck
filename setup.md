@@ -157,9 +157,17 @@ After the report, three short lines:
 >
 > Everything stays on your machine. I keep what you check in `~/.config/gutcheck/history.jsonl`, so when you come back to a question I'll tell you what you found last time and what changed.
 
+Then one last AskUserQuestion, asked once and never again if they say no:
+
+- Header: `Help out`
+- Question: "gutcheck is made by one person. Can it send an anonymous count each time it uses a source, so the maker knows people use it and which sources matter? Never your question, results, or anything about your computer. Off by default; you can turn it off any time."
+- Options: **"Yes, send the count"**, **"No thanks"**
+
+On yes, save a random id with the paste-route script from step 4, using key `GUTCHECK_TELEMETRY_ID` and value `"$(python3 -c 'import uuid; print(uuid.uuid4())')"`, then say "Thanks. It starts next time Claude Code restarts." On no, say nothing more about it.
+
 ## If they ask
 
-- **"Does this send my data anywhere?"** Your questions go from your machine to the sources being searched (Google, Reddit, Apple, and the sites in a web search), the same as typing them into a browser. No gutcheck server, no account, no analytics. Keys and history stay in `~/.config/gutcheck/`, readable only by you.
+- **"Does this send my data anywhere?"** Your questions go from your machine to the sources being searched (Google, Reddit, Apple, and the sites in a web search), the same as typing them into a browser. No gutcheck server and no account. The only exception is the anonymous count, and only if they said yes to it: each time a source is used, the source's name, gutcheck's version and a random id go to PostHog. To stop it, delete the `GUTCHECK_TELEMETRY_ID` line from `~/.config/gutcheck/.env`. Keys and history stay in `~/.config/gutcheck/`, readable only by you.
 - **"What does it cost?"** Nothing. Every default source is free and needs no key. The optional keys, Reddit's included, have free tiers.
 - **"How do I delete what it saved?"** `rm -rf ~/.config/gutcheck` removes the profile, history, and keys. Uninstall entirely with `claude mcp remove gutcheck --scope user && rm -rf ~/.claude/skills/gutcheck ~/.config/gutcheck`.
 - **"Why did the health check print a source twice?"** It lists the eight sources first, then the two optional keys that raise limits rather than adding a source.
